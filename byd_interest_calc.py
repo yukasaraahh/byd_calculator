@@ -19,6 +19,7 @@ st.markdown("""
 import pandas as pd
 import io
 import re
+import math
 from io import StringIO
 import requests
 
@@ -291,9 +292,12 @@ if input_valid and price > 0 and not down_payment_df.empty:
 
                          st.markdown("### 📊 สรุปการผ่อนชำระ (Installment Summary)")
                          res_col1, res_col2, res_col3 = st.columns(3)
-                         res_col1.metric("เงินดาวน์ที่เลือก (Your Down Payment)", f"฿{down_payment_amount:,.2f} ({down_percent:.2f}%)")
-                         res_col2.metric("อัตราดอกเบี้ย (Interest Rate Applied)", f"{interest_rate:.2f}%", help=f"Based on the nearest qualifying tier: {matched_percent:.1f}%")
-                         res_col3.metric("ยอดผ่อนรายเดือน (Monthly Installment)", f"฿{monthly_installment:,.2f}")
+                         rounded_down_payment = math.ceil(down_payment_amount)
+                         res_col1.metric("เงินดาวน์ที่เลือก (Your Down Payment)", f"฿{rounded_down_payment:,.0f} ({int(down_percent)}%)")
+                         res_col2.metric("อัตราดอกเบี้ย (Interest Rate Applied)", f"{interest_rate:.2f}%", help=f"Based on the nearest qualifying tier: {int(matched_percent)}%")
+                         rounded_monthly = math.ceil(monthly_installment)
+                         res_col3.metric("ยอดผ่อนรายเดือน (Monthly Installment)", f"฿{rounded_monthly:,.0f}")
+
                      except (ValueError, TypeError, ZeroDivisionError) as e:
                          st.error(f"⚠️ Error calculating installment for {period} months: {e}")
                  else:
