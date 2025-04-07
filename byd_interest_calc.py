@@ -89,7 +89,7 @@ else:
     down_payment_df = pd.DataFrame(columns=['down_payment', '48', '60', '72', '84'])
 
 # --------- App layout ---------
-st.title("🚗 Car Down Payment & Installment Calculator")
+st.title("🚗 โปรแกรมคํานวณค่างวดรถ BYD (BYD Car Installment Calculator)")
 
 # --------- Define main layout columns ---------
 col_img, col_inputs = st.columns([4, 2])
