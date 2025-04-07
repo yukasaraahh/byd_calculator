@@ -190,22 +190,21 @@ with col_inputs:
             except ValueError:
                 st.warning("⚠️ กรุณากรอกจำนวนเงินดาวน์ให้ถูกต้อง (Please enter a valid number for the down payment amount.)")
                 
-             else:
-    if not down_payment_df.empty and 'down_payment' in down_payment_df.columns:
-        options = sorted(down_payment_df['down_payment'].unique())
-        default_ix = options.index(10.0) if 10.0 in options else (options.index(15.0) if 15.0 in options else 0)
-        down_percent = st.radio(
-            "เลือกเปอร์เซ็นต์เงินดาวน์ (Select Down Payment Percentage)",
-            options,
-            index=default_ix,
-            key="dp_percent",
-            format_func=lambda x: f"{int(x)}%"
-        )
-        down_payment_amount = (down_percent / 100) * price
-        input_valid = True
-    else:
-        st.warning("⚠️ ไม่มีตัวเลือกเปอร์เซ็นต์เงินดาวน์ในระบบ (Down payment percentage options not available)")
-
+        else:
+            if not down_payment_df.empty and 'down_payment' in down_payment_df.columns:
+                options = sorted(down_payment_df['down_payment'].unique())
+                default_ix = options.index(10.0) if 10.0 in options else (options.index(15.0) if 15.0 in options else 0)
+                down_percent = st.radio(
+                    "เลือกเปอร์เซ็นต์เงินดาวน์ (Select Down Payment Percentage)",
+                    options,
+                    index=default_ix,
+                    key="dp_percent",
+                    format_func=lambda x: f"{int(x)}%"
+                )
+                down_payment_amount = (down_percent / 100) * price
+                input_valid = True
+            else:
+                st.warning("⚠️ ไม่มีตัวเลือกเปอร์เซ็นต์เงินดาวน์ในระบบ (Down payment percentage options not available)")
 
         if input_valid:
              st.caption(f"Selected Down Payment: ฿{down_payment_amount:,.2f} ({down_percent:.2f}%)")
