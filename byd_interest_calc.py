@@ -5,11 +5,12 @@ st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;700&display=swap');
 
-    html, body, [class*="css"]  {
+    * {
         font-family: 'Noto Sans Thai', sans-serif !important;
     }
 
-    h1, h2, h3, h4, h5, h6, .stText, .stMarkdown {
+    html, body, div, span, input, select, button, label, textarea,
+    .css-1d391kg, .css-ffhzg2, .css-1cpxqw2, .css-1offfwp, .stButton button {
         font-family: 'Noto Sans Thai', sans-serif !important;
     }
     </style>
