@@ -167,15 +167,15 @@ with col_inputs:
     # --- Down Payment & Installment Options ---
     st.markdown("#### 💸 Down Payment & Installment")
 
-    input_type = st.radio("เลือกรูปแบบการวางเงินดาวน์ (Down Payment Input Type)", ("จำนวนเงิน (บาท) (Amount - THB)", "เปอร์เซ็นต์ (%) (Percentage)"), key="dp_type", horizontal=True)
+    input_type = st.radio("เลือกรูปแบบการวางเงินดาวน์ (Down Payment Input Type)", ("จำนวนเงิน (Amount - THB)", "เปอร์เซ็นต์ (%) (Percentage)"), key="dp_type", horizontal=True)
 
     down_payment_amount = 0.0
     down_percent = 0.0
     input_valid = False
 
     if price > 0:
-        if input_type == "Amount (THB)":
-            raw_input = st.text_input("Enter Down Payment Amount (THB)", value=f"{price*0.1:,.0f}", key="dp_amount_thb")
+        if input_type == "จำนวนเงิน (Amount - THB)":
+            raw_input = st.text_input("กรอกจำนวนเงินดาวน์ (Enter Down Payment Amount - THB)", value=f"{price*0.1:,.0f}", key="dp_amount_thb")
             try:
                 down_payment_amount = float(raw_input.replace(",", ""))
                 down_percent = (down_payment_amount / price) * 100
