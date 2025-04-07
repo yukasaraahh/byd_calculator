@@ -119,7 +119,7 @@ with col_inputs:
          st.session_state.selected_model = model_options[0]
 
     selected_model = st.selectbox(
-        "Select Car Model",
+        "เลือกรุ่นรถที่ต้องการ (Select Car Model)",
         model_options,
         key="selected_model",
     )
@@ -141,7 +141,7 @@ with col_inputs:
         submodel_index = 0
 
     selected_submodel = st.selectbox(
-        "Select Submodel",
+        "เลือกรุ่นย่อย (Select Submodel)",
         submodel_options,
         key="selected_submodel",
         index=submodel_index
@@ -161,13 +161,13 @@ with col_inputs:
         image_url_for_display = None
 
     # --- Display Price ---
-    st.metric(label="💰 Car Price", value=f"฿{price:,.2f}")
+    st.metric(label="💰 ราคาจำหน่าย (Car Price)", value=f"฿{price:,.2f}")
     st.markdown("---")
 
     # --- Down Payment & Installment Options ---
     st.markdown("#### 💸 Down Payment & Installment")
 
-    input_type = st.radio("Down Payment Input Type", ("Amount (THB)", "Percentage (%)"), key="dp_type", horizontal=True)
+    input_type = st.radio("เลือกรูปแบบการวางเงินดาวน์ (Down Payment Input Type)", ("จำนวนเงิน (บาท) (Amount - THB)", "เปอร์เซ็นต์ (%) (Percentage)"), key="dp_type", horizontal=True)
 
     down_payment_amount = 0.0
     down_percent = 0.0
