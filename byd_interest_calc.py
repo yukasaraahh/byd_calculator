@@ -112,7 +112,7 @@ col_img, col_inputs = st.columns([4, 2])
 
 # --------- Input Column ---------
 with col_inputs:
-    st.markdown("### รุ่นรถที่เลือก (Select Car Model)")
+    st.markdown("### 🚗 เลือกรุ่นรถที่สนใจ (Select Car Model)")
 
     # --- Car Selection ---
     model_options = sorted(car_df["model"].unique())
@@ -166,7 +166,7 @@ with col_inputs:
     st.markdown("---")
 
     # --- Down Payment & Installment Options ---
-    st.markdown("#### 💸 Down Payment & Installment")
+    st.markdown("#### 💵 คำนวณค่างวด (Estimate Your Monthly Payment)")
 
     input_type = st.radio("เลือกรูปแบบการวางเงินดาวน์ (Down Payment Input Type)", ("จำนวนเงิน (Amount - THB)", "เปอร์เซ็นต์ (%) (Percentage)"), key="dp_type", horizontal=True)
 
