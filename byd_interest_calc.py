@@ -3,14 +3,14 @@ st.set_page_config(page_title="Car Calculator", page_icon="🚗", layout="wide")
 
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;700&display=swap');
 
     html, body, [class*="css"]  {
-        font-family: 'Noto Sans Thai', sans-serif;
+        font-family: 'Noto Sans Thai', sans-serif !important;
     }
 
-    h1, h2, h3, h4, h5, h6 {
-        font-family: 'Noto Sans Thai', sans-serif;
+    h1, h2, h3, h4, h5, h6, .stText, .stMarkdown {
+        font-family: 'Noto Sans Thai', sans-serif !important;
     }
     </style>
 """, unsafe_allow_html=True)
