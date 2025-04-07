@@ -109,7 +109,9 @@ with col_inputs:
         key="selected_model",
     )
 
-    submodel_options = sorted(car_df[car_df["model"] == selected_model]["sub model"].unique())
+    submodel_df = car_df[car_df["model"] == selected_model].sort_values(by="price")
+    submodel_options = submodel_df["sub model"].tolist()
+
     if not submodel_options:
         st.error(f"No submodels found for {selected_model}. Please check the data.")
         st.stop()
