@@ -193,13 +193,18 @@ with col_inputs:
             if not down_payment_df.empty and 'down_payment' in down_payment_df.columns:
                 options = sorted(down_payment_df['down_payment'].unique())
                 default_ix = options.index(10.0) if 10.0 in options else (options.index(15.0) if 15.0 in options else 0)
-                down_percent = st.select_slider(
+                percent_options = [int(x) for x in options]
+                percent_labels = [f"{p}%" for p in percent_options]
+                
+                selected_label = st.select_slider(
                     "เลือกเปอร์เซ็นต์เงินดาวน์ (Select Down Payment Percentage)",
-                    options=[int(x) for x in options],
-                    value=int(options[default_ix]),
+                    options=percent_labels,
+                    value=f"{int(options[default_ix])}%",
                     key="dp_percent_slider"
                 )
-                down_percent = float(down_percent)
+                
+                # Convert back to number for calculation
+                down_percent = float(selected_label.replace("%", ""))
                 down_payment_amount = (down_percent / 100) * price
                 input_valid = True
             else:
