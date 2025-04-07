@@ -194,12 +194,13 @@ with col_inputs:
             if not down_payment_df.empty and 'down_payment' in down_payment_df.columns:
                 options = sorted(down_payment_df['down_payment'].unique())
                 default_ix = options.index(10.0) if 10.0 in options else (options.index(15.0) if 15.0 in options else 0)
-                down_percent = st.radio(
+                down_percent = st.selectbox(
                     "เลือกเปอร์เซ็นต์เงินดาวน์ (Select Down Payment Percentage)",
                     options,
                     index=default_ix,
                     key="dp_percent",
-                    format_func=lambda x: f"{int(x)}%"
+                    format_func=lambda x: f"{int(x)}%",
+                    disabled=False 
                 )
                 down_payment_amount = (down_percent / 100) * price
                 input_valid = True
