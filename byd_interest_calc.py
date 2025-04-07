@@ -3,22 +3,14 @@ st.set_page_config(page_title="Car Calculator", page_icon="🚗", layout="wide")
 
 st.markdown("""
     <style>
-    @font-face {
-        font-family: 'DB';
-        src: url('https://static1.squarespace.com/static/6527b5ece04b97628471bfd2/t/652a5ffdc113511d322446ab/1697275903360/DB+Heavent+Med+v3.2.ttf'); 
-    }
-
-    @font-face {
-        font-family: 'DBlight';
-        src: url('https://static1.squarespace.com/static/6527b5ece04b97628471bfd2/t/652a5ffd5a71ab5c52b5ae2f/1697275903580/DB+Heavent+Li+v3.2.ttf'); 
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai&display=swap');
 
     html, body, [class*="css"]  {
-        font-family: 'DBlight', sans-serif;
+        font-family: 'Noto Sans Thai', sans-serif;
     }
 
     h1, h2, h3, h4, h5, h6 {
-        font-family: 'DB', sans-serif;
+        font-family: 'Noto Sans Thai', sans-serif;
     }
     </style>
 """, unsafe_allow_html=True)
