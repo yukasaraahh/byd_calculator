@@ -211,11 +211,11 @@ with col_inputs:
                 st.warning("⚠️ ไม่มีตัวเลือกเปอร์เซ็นต์เงินดาวน์ในระบบ (Down payment percentage options not available)")
 
         if input_valid:
-             st.caption(f"Selected Down Payment: ฿{down_payment_amount:,.2f} ({down_percent:.2f}%)")
+             st.caption(f"💸ยอดเงินดาวน์ที่เลือก: ฿{down_payment_amount:,.2f} ({down_percent:.2f}%)")
         elif not input_valid and input_type == "Amount (THB)":
-             st.caption("Enter a valid amount above the minimum required.")
+             st.caption("⚠️กรุณากรอกจำนวนเงินดาวน์ให้ถูกต้องตามขั้นต่ำที่กำหนด (Enter a valid amount above the minimum required.)")
     else:
-         st.error("Cannot calculate down payment as car price is invalid.")
+         st.error("⚠️ไม่สามารถคำนวณเงินดาวน์ได้เนื่องจากราคารถไม่ถูกต้อง (Cannot calculate down payment as car price is invalid.)")
 
     period_options = [48, 60, 72, 84]
     period = st.selectbox("Select Installment Period (months)", period_options, key="period_months")
