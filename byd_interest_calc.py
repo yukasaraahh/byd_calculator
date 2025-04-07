@@ -182,9 +182,9 @@ with col_inputs:
                 min_down_required = price * 0.05
 
                 if down_payment_amount < min_down_required:
-                    st.warning(f"🚫 Minimum 5% down payment required (฿{min_down_required:,.2f})")
+                    st.warning(f"🚫ต้องวางเงินดาวน์อย่างน้อย 5% - Minimum 5% down payment required (฿{min_down_required:,.2f})")
                 elif down_payment_amount > price:
-                    st.warning(f"🚫 Down payment cannot exceed car price (฿{price:,.2f})")
+                    st.warning(f"🚫เงินดาวน์ต้องไม่เกินราคารถ - Down payment cannot exceed car price (฿{price:,.2f})")
                 else:
                     input_valid = True
             except ValueError:
