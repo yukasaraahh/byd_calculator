@@ -189,17 +189,19 @@ with col_inputs:
                     input_valid = True
             except ValueError:
                 st.warning("⚠️ กรุณากรอกจำนวนเงินดาวน์ให้ถูกต้อง (Please enter a valid number for the down payment amount.)")
-       else:
+                
+else:
     if not down_payment_df.empty and 'down_payment' in down_payment_df.columns:
         options = sorted(down_payment_df['down_payment'].unique())
         st.markdown("#### เลือกเปอร์เซ็นต์เงินดาวน์ (Select Down Payment Percentage)")
 
         with st.container():
-            cols = st.columns(3)
+            cols = st.columns(3)  # display 3 options per row (auto-stack on mobile)
             selected = None
             for i, p in enumerate(options):
+                label = f"{int(p)}%"  # removes .0
                 with cols[i % 3]:
-                    if st.radio(f"pct_{p}", [f"{int(p)}%"], index=0 if p == 10.0 else -1, key=f"radio_{p}"):
+                    if st.radio(f"pct_{p}", [label], index=0 if p == 10.0 else -1, key=f"radio_{p}"):
                         selected = p
 
         if selected is not None:
@@ -208,6 +210,9 @@ with col_inputs:
             input_valid = True
         else:
             st.warning("⚠️ กรุณาเลือกเปอร์เซ็นต์เงินดาวน์ (Please select a down payment percentage)")
+    else:
+        st.warning("⚠️ ไม่มีตัวเลือกเปอร์เซ็นต์เงินดาวน์ในระบบ (Down payment percentage options not available)")
+
 
 
         if input_valid:
