@@ -273,7 +273,7 @@ if input_valid and price > 0 and not down_payment_df.empty:
                  st.success(f"✅ With {down_percent:.2f}% down payment, you qualify for these 30% plan options (minimum interest condition met):")
                  st.table(df_30)
              else:
-                 st.warning("No periods qualify for the 30% plan because the calculated interest does not exceed the minimum threshold for any period.")
+                 st.warning("😕 ไม่มีงวดผ่อนที่เข้าเงื่อนไขในแผนดาวน์ 30% เนื่องจากดอกเบี้ยที่คำนวณไม่ถึงเกณฑ์ขั้นต่ำที่กำหนด (No periods qualify for the 30% plan because the calculated interest does not exceed the minimum threshold for any period.)")
              
              # Since the 30% branch applies, skip showing the regular financing result.
              st.stop()
