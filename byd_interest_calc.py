@@ -289,11 +289,11 @@ if input_valid and price > 0 and not down_payment_df.empty:
                          total_interest = loan_amount * (interest_rate / 100) * (period / 12)
                          monthly_installment = (loan_amount + total_interest) / period
 
-                         st.markdown("### 📊 Down and Installment Payment Result")
+                         st.markdown("### 📊 สรุปการผ่อนชำระ (Installment Summary)")
                          res_col1, res_col2, res_col3 = st.columns(3)
-                         res_col1.metric("Down Payment", f"฿{down_payment_amount:,.2f} ({down_percent:.2f}%)")
-                         res_col2.metric("Interest Rate Applied", f"{interest_rate:.2f}%", help=f"Based on the nearest qualifying tier: {matched_percent:.1f}%")
-                         res_col3.metric("Monthly Installment", f"฿{monthly_installment:,.2f}")
+                         res_col1.metric("เงินดาวน์ที่เลือก (Your Down Payment)", f"฿{down_payment_amount:,.2f} ({down_percent:.2f}%)")
+                         res_col2.metric("อัตราดอกเบี้ย (Interest Rate Applied)", f"{interest_rate:.2f}%", help=f"Based on the nearest qualifying tier: {matched_percent:.1f}%")
+                         res_col3.metric("ยอดผ่อนรายเดือน (Monthly Installment)", f"฿{monthly_installment:,.2f}")
                      except (ValueError, TypeError, ZeroDivisionError) as e:
                          st.error(f"⚠️ Error calculating installment for {period} months: {e}")
                  else:
