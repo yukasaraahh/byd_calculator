@@ -112,7 +112,11 @@ col_img, col_inputs = st.columns([4, 2])
 
 # --------- Input Column ---------
 with col_inputs:
-    st.markdown("### 🚗 เลือกรุ่นรถที่สนใจ (Select Car Model)")
+    st.markdown(\"\"\"
+    <div style="background-color: #f9f9f9; padding: 20px; border-radius: 12px;">
+    <h4>🚗 เลือกรุ่นรถที่สนใจ</h4>
+    </div>
+    \"\"\", unsafe_allow_html=True)
 
     # --- Car Selection ---
     model_options = sorted(car_df["model"].unique())
