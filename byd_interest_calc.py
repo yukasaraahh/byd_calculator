@@ -218,7 +218,7 @@ with col_inputs:
          st.error("⚠️ไม่สามารถคำนวณเงินดาวน์ได้เนื่องจากราคารถไม่ถูกต้อง (Cannot calculate down payment as car price is invalid.)")
 
     period_options = [48, 60, 72, 84]
-    period = st.selectbox("Select Installment Period (months)", period_options, key="period_months")
+    period = st.selectbox("เลือกระยะเวลาการผ่อน (Select Installment Period - month)", period_options, key="period_months")
 
 # --------- Image Column ---------
 with col_img:
@@ -234,7 +234,7 @@ st.markdown("---")
 if input_valid and price > 0 and not down_payment_df.empty:
     # If the down payment equals (or exceeds) the car's price, show an info message.
     if down_payment_amount >= price:
-         st.info("The down payment is equal to the car's price. No financing is required.")
+         st.info("เงินดาวน์เท่ากับราคารถ ไม่สามารถจัดไฟแนนซ์ได้ (The down payment is equal to the car's price. No financing is required.)")
     else:
          available_percents = sorted(down_payment_df['down_payment'].unique())
          matched_percent = max([p for p in available_percents if p <= down_percent], default=None)
