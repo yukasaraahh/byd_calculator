@@ -324,8 +324,6 @@ elif price <= 0:
     st.info("ℹ️ Please select a valid car with a price > 0.")
 elif down_payment_df.empty:
     st.error("❌ Cannot perform calculations because the down payment interest rate data is missing or invalid.")
-else:
-    st.error("An unexpected state occurred. Please check inputs and data sources.")
 
 # PDF Section remains commented out
 # ... (rest of the PDF code if needed) ...
