@@ -108,10 +108,6 @@ else:
 if "show_result" not in st.session_state:
     st.session_state.show_result = False
 
-# ✅ Initialize variables before inputs (to prevent NameError)
-image_url_for_display = None
-price = 0
-
 # --------- App layout ---------
 st.title("🚗 โปรแกรมคํานวณค่างวดรถ BYD (BYD Car Installment Calculator)")
 
@@ -148,6 +144,8 @@ with col_inputs:
 
         car_row = car_df[(car_df["model"] == selected_model) & (car_df["sub model"] == selected_submodel)]
         price = car_row["price"].values[0] if not car_row.empty else 0
+        image_url_for_display = convert_drive_link_to_direct_image_url(car_row['image_url'].values[0])
+
         st.metric(label="💰 ราคาจำหน่าย (Car Price)", value=f"฿{price:,.2f}")
 
         st.markdown("---")
