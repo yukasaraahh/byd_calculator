@@ -116,122 +116,74 @@ col_img, col_inputs = st.columns([4, 2])
 
 # --------- Input Column ---------
 with col_inputs:
-    st.markdown("""
-    <div style="background-color: #f9f9f9; padding: 20px; border-radius: 12px;">
-    <h4>🚗 เลือกรุ่นรถที่สนใจ</h4>
-    </div>
-    """, unsafe_allow_html=True)
+    with st.form("car_calc_form"):
+        st.markdown("""
+        <div style="background-color: #f9f9f9; padding: 20px; border-radius: 12px;">
+        <h4>🚗 เลือกรุ่นรถที่สนใจ</h4>
+        </div>
+        """, unsafe_allow_html=True)
 
-    # --- Car Selection ---
-    model_options = sorted(car_df["model"].unique())
-    if 'selected_model' not in st.session_state or st.session_state.selected_model not in model_options:
-         st.session_state.selected_model = model_options[0]
+        model_options = sorted(car_df["model"].unique())
+        if 'selected_model' not in st.session_state or st.session_state.selected_model not in model_options:
+            st.session_state.selected_model = model_options[0]
 
-    selected_model = st.selectbox(
-        "เลือกรุ่นรถที่ต้องการ (Select Car Model)",
-        model_options,
-        key="selected_model",
-    )
+        selected_model = st.selectbox("เลือกรุ่นรถที่ต้องการ (Select Car Model)", model_options, key="selected_model")
+        submodel_df = car_df[car_df["model"] == selected_model].sort_values(by="price")
+        submodel_options = submodel_df["sub model"].tolist()
 
-    submodel_df = car_df[car_df["model"] == selected_model].sort_values(by="price")
-    submodel_options = submodel_df["sub model"].tolist()
+        if 'selected_submodel' not in st.session_state or st.session_state.selected_submodel not in submodel_options:
+            st.session_state.selected_submodel = submodel_options[0]
 
-    if not submodel_options:
-        st.error(f"No submodels found for {selected_model}. Please check the data.")
-        st.stop()
+        try:
+            submodel_index = submodel_options.index(st.session_state.selected_submodel)
+        except ValueError:
+            st.session_state.selected_submodel = submodel_options[0]
+            submodel_index = 0
 
-    if 'selected_submodel' not in st.session_state or st.session_state.selected_submodel not in submodel_options:
-        st.session_state.selected_submodel = submodel_options[0]
+        selected_submodel = st.selectbox("เลือกรุ่นย่อย (Select Submodel)", submodel_options, key="selected_submodel", index=submodel_index)
 
-    try:
-        submodel_index = submodel_options.index(st.session_state.selected_submodel)
-    except ValueError:
-        st.session_state.selected_submodel = submodel_options[0]
-        submodel_index = 0
+        car_row = car_df[(car_df["model"] == selected_model) & (car_df["sub model"] == selected_submodel)]
+        price = car_row["price"].values[0] if not car_row.empty else 0
+        st.metric(label="💰 ราคาจำหน่าย (Car Price)", value=f"฿{price:,.2f}")
 
-    selected_submodel = st.selectbox(
-        "เลือกรุ่นย่อย (Select Submodel)",
-        submodel_options,
-        key="selected_submodel",
-        index=submodel_index
-    )
+        st.markdown("---")
+        st.markdown("#### 💵 คำนวณค่างวด (Estimate Your Monthly Payment)")
 
-    # --- Get Data Based on Selections ---
-    car_row = car_df[(car_df["model"] == selected_model) & (car_df["sub model"] == selected_submodel)]
+        input_type = st.radio("เลือกรูปแบบการวางเงินดาวน์", ("จำนวนเงิน (Amount - THB)", "เปอร์เซ็นต์ (%) (Percentage)"), key="dp_type", horizontal=True)
 
-    if not car_row.empty:
-        price = car_row["price"].values[0]
-        image_url_for_display = car_row["image_url"].values[0]
-        if pd.notna(image_url_for_display) and isinstance(image_url_for_display, str) and "drive.google.com" in image_url_for_display:
-             image_url_for_display = convert_drive_link_to_direct_image_url(image_url_for_display)
-    else:
-        st.error(f"Could not find data for {selected_model} - {selected_submodel}. Using default price 0.")
-        price = 0
-        image_url_for_display = None
+        down_payment_amount = 0.0
+        down_percent = 0.0
+        input_valid = False
 
-    # --- Display Price ---
-    st.metric(label="💰 ราคาจำหน่าย (Car Price)", value=f"฿{price:,.2f}")
-    st.markdown("---")
-
-    # --- Down Payment & Installment Options ---
-    st.markdown("#### 💵 คำนวณค่างวด (Estimate Your Monthly Payment)")
-
-    input_type = st.radio("เลือกรูปแบบการวางเงินดาวน์ (Down Payment Input Type)", ("จำนวนเงิน (Amount - THB)", "เปอร์เซ็นต์ (%) (Percentage)"), key="dp_type", horizontal=True)
-
-    down_payment_amount = 0.0
-    down_percent = 0.0
-    input_valid = False
-
-    if price > 0:
         if input_type == "จำนวนเงิน (Amount - THB)":
-            raw_input = st.text_input("กรอกจำนวนเงินดาวน์ (Enter Down Payment Amount - THB)", value=f"{price*0.1:,.0f}", key="dp_amount_thb")
+            raw_input = st.text_input("กรอกจำนวนเงินดาวน์", value=f"{price*0.1:,.0f}", key="dp_amount_thb")
             try:
                 down_payment_amount = float(raw_input.replace(",", ""))
                 down_percent = (down_payment_amount / price) * 100
-                min_down_required = price * 0.05
-
-                if down_payment_amount < min_down_required:
-                    st.warning(f"🚫ต้องวางเงินดาวน์อย่างน้อย 5% - Minimum 5% down payment required (฿{min_down_required:,.2f})")
-                elif down_payment_amount > price:
-                    st.warning(f"🚫เงินดาวน์ต้องไม่เกินราคารถ - Down payment cannot exceed car price (฿{price:,.2f})")
-                else:
-                    input_valid = True
+                input_valid = 5 <= down_percent <= 100
             except ValueError:
-                st.warning("⚠️ กรุณากรอกจำนวนเงินดาวน์ให้ถูกต้อง (Please enter a valid number for the down payment amount.)")                
+                st.warning("⚠️ กรุณากรอกจำนวนเงินดาวน์ให้ถูกต้อง")
         else:
-            if not down_payment_df.empty and 'down_payment' in down_payment_df.columns:
-                options = sorted(down_payment_df['down_payment'].unique())
-                default_ix = options.index(10.0) if 10.0 in options else (options.index(15.0) if 15.0 in options else 0)
-                percent_options = [int(x) for x in options]
-                percent_labels = [f"{p}%" for p in percent_options]
-                
-                selected_label = st.select_slider(
-                    "เลือกเปอร์เซ็นต์เงินดาวน์ (Select Down Payment Percentage)",
-                    options=percent_labels,
-                    value=f"{int(options[default_ix])}%",
-                    key="dp_percent_slider"
-                )
-                
-                # Convert back to number for calculation
-                down_percent = float(selected_label.replace("%", ""))
-                down_payment_amount = (down_percent / 100) * price
-                input_valid = True
-            else:
-                st.warning("⚠️ ไม่มีตัวเลือกเปอร์เซ็นต์เงินดาวน์ในระบบ (Down payment percentage options not available)")
+            options = sorted(down_payment_df['down_payment'].unique())
+            percent_options = [int(x) for x in options]
+            percent_labels = [f"{p}%" for p in percent_options]
+            default_ix = options.index(10.0) if 10.0 in options else 0
+            selected_label = st.select_slider("เลือกเปอร์เซ็นต์เงินดาวน์", options=percent_labels, value=f"{int(options[default_ix])}%", key="dp_percent_slider")
+            down_percent = float(selected_label.replace("%", ""))
+            down_payment_amount = (down_percent / 100) * price
+            input_valid = True
 
-        if input_valid:
-             st.caption(f"💸ยอดเงินดาวน์ที่เลือก: ฿{down_payment_amount:,.2f} ({down_percent:.2f}%)")
-        elif not input_valid and input_type == "Amount (THB)":
-             st.caption("⚠️กรุณากรอกจำนวนเงินดาวน์ให้ถูกต้องตามขั้นต่ำที่กำหนด (Enter a valid amount above the minimum required.)")
-    else:
-         st.error("⚠️ไม่สามารถคำนวณเงินดาวน์ได้เนื่องจากราคารถไม่ถูกต้อง (Cannot calculate down payment as car price is invalid.)")
+        st.caption(f"💸 เงินดาวน์ที่เลือก: ฿{down_payment_amount:,.0f} ({int(down_percent)}%)")
 
-    period_options = [48, 60, 72, 84]
-    period = st.selectbox("เลือกระยะเวลาการผ่อน (Select Installment Period - month)", period_options, key="period_months")
+        period_options = [48, 60, 72, 84]
+        period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน)", period_options, key="period_months")
 
-# ✅ Button to trigger result
-    if st.button("🧮 คำนวณค่างวด (Calculate Payment)"):
-        st.session_state.show_result = True
+        # ✅ Submit button
+        submitted = st.form_submit_button("🧮 คำนวณค่างวด (Calculate Payment)")
+
+        # ✅ Set session state to show result
+        if submitted:
+            st.session_state.show_result = True
 
 # --------- Image Column ---------
 with col_img:
