@@ -1,5 +1,5 @@
 import streamlit as st
-st.set_page_config(page_title="Car Calculator", page_icon="🚗", layout="wide")
+st.set_page_config(page_title="คำนวณค่างวดรถ BYD | BYD ชลบุรี ออโตโมทีฟ", page_icon="🚗", layout="wide")
 
 st.markdown("""
     <style>
@@ -225,6 +225,10 @@ with col_inputs:
     period_options = [48, 60, 72, 84]
     period = st.selectbox("เลือกระยะเวลาการผ่อน (Select Installment Period - month)", period_options, key="period_months")
 
+    calculate_clicked = st.button("🧮 คำนวณค่างวด (Calculate Payment)")
+    if calculate_clicked:
+        st.session_state.show_result = True
+
 # --------- Image Column ---------
 with col_img:
     st.markdown("#### Selected Car")
@@ -236,7 +240,7 @@ with col_img:
 # --------- Calculations & Results ---------
 st.markdown("---")
 
-if input_valid and price > 0 and not down_payment_df.empty:
+if st.session_state.show_result and input_valid and price > 0 and not down_payment_df.empty:
     # If the down payment equals (or exceeds) the car's price, show an info message.
     if down_payment_amount >= price:
          st.info("เงินดาวน์เท่ากับราคารถ ไม่สามารถจัดไฟแนนซ์ได้ (The down payment is equal to the car's price. No financing is required.)")
