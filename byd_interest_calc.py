@@ -103,7 +103,8 @@ if not down_payment_df.empty:
 else:
     st.error("❌ Failed to load down payment data. Calculations will not be possible.")
     down_payment_df = pd.DataFrame(columns=['down_payment', '48', '60', '72', '84'])
-    # Initialize session state for result display
+    
+# ✅ Session state setup
 if "show_result" not in st.session_state:
     st.session_state.show_result = False
 
@@ -228,9 +229,9 @@ with col_inputs:
     period_options = [48, 60, 72, 84]
     period = st.selectbox("เลือกระยะเวลาการผ่อน (Select Installment Period - month)", period_options, key="period_months")
 
-    calculate_clicked = st.button("🧮 คำนวณค่างวด (Calculate Payment)")
-    if calculate_clicked:
-    st.session_state.show_result = True
+# ✅ Button to trigger result
+    if st.button("🧮 คำนวณค่างวด (Calculate Payment)"):
+        st.session_state.show_result = True
 
 # --------- Image Column ---------
 with col_img:
