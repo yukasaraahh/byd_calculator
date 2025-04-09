@@ -108,6 +108,10 @@ else:
 if "show_result" not in st.session_state:
     st.session_state.show_result = False
 
+# ✅ Initialize variables before inputs (to prevent NameError)
+image_url_for_display = None
+price = 0
+
 # --------- App layout ---------
 st.title("🚗 โปรแกรมคํานวณค่างวดรถ BYD (BYD Car Installment Calculator)")
 
