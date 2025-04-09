@@ -103,6 +103,9 @@ if not down_payment_df.empty:
 else:
     st.error("❌ Failed to load down payment data. Calculations will not be possible.")
     down_payment_df = pd.DataFrame(columns=['down_payment', '48', '60', '72', '84'])
+    # Initialize session state for result display
+if "show_result" not in st.session_state:
+    st.session_state.show_result = False
 
 # --------- App layout ---------
 st.title("🚗 โปรแกรมคํานวณค่างวดรถ BYD (BYD Car Installment Calculator)")
@@ -227,7 +230,7 @@ with col_inputs:
 
     calculate_clicked = st.button("🧮 คำนวณค่างวด (Calculate Payment)")
     if calculate_clicked:
-        st.session_state.show_result = True
+    st.session_state.show_result = True
 
 # --------- Image Column ---------
 with col_img:
