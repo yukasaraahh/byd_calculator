@@ -108,6 +108,20 @@ else:
 if "show_result" not in st.session_state:
     st.session_state.show_result = False
 
+# ✅ Initialize variables before form logic
+image_url_for_display = None
+price = 0
+input_valid = False
+
+# ✅ Image render helper
+def render_image():
+    global image_url_for_display
+    if pd.notna(image_url_for_display) and isinstance(image_url_for_display, str) and image_url_for_display.startswith("http"):
+        st.image(image_url_for_display, caption=f"{selected_model} - {selected_submodel}", use_container_width=True)
+    elif price > 0:
+        st.info("ℹ️ No image available for this model.")
+
+
 # --------- App layout ---------
 st.title("🚗 โปรแกรมคํานวณค่างวดรถ BYD (BYD Car Installment Calculator)")
 
@@ -190,10 +204,7 @@ with col_inputs:
 # --------- Image Column ---------
 with col_img:
     st.markdown("#### Selected Car")
-    if pd.notna(image_url_for_display) and isinstance(image_url_for_display, str) and image_url_for_display.startswith("http"):
-        st.image(image_url_for_display, caption=f"{selected_model} - {selected_submodel}", use_container_width=True)
-    elif price > 0:
-        st.info("ℹ️ No image available for this model.")
+    render_image()
 
 # --------- Calculations & Results ---------
 st.markdown("---")
