@@ -129,6 +129,7 @@ def render_image():
 
 # --------- App layout ---------
 st.title("🚗 โปรแกรมคํานวณค่างวดรถ BYD (BYD Car Installment Calculator)")
+st.markdown("### เลือกรถที่คุณสนใจ (Select Car & Options)")
 
 # --------- Define main layout columns ---------
 col_img, col_inputs = st.columns([4, 2])
