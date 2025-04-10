@@ -134,7 +134,6 @@ st.title("🚗 โปรแกรมคํานวณค่างวดรถ B
 col_img, col_inputs = st.columns([4, 2])
 
 # --------- Input Column ---------
-col_img, col_inputs = st.columns([1.5, 1])  # Adjust ratio as needed (image:inputs)
 
 with col_inputs:
     model_options = sorted(car_df["model"].unique())
