@@ -129,7 +129,6 @@ def render_image():
 
 # --------- App layout ---------
 st.title("🚗 โปรแกรมคํานวณค่างวดรถ BYD (BYD Car Installment Calculator)")
-st.markdown("### เลือกรถที่คุณสนใจ (Select Car & Options)")
 
 # --------- Define main layout columns ---------
 col_img, col_inputs = st.columns([4, 2])
@@ -137,7 +136,12 @@ col_img, col_inputs = st.columns([4, 2])
 # --------- Input Column ---------
 
 with col_inputs:
+    st.markdown("### เลือกรถที่คุณสนใจ (Select Car & Options)")
+    
     model_options = sorted(car_df["model"].unique())
+    if 'selected_model' not in st.session_state or st.session_state.selected_model not in model_options:
+         st.session_state.selected_model = model_options[0]
+        
     selected_model = st.selectbox("เลือกรุ่นรถที่ต้องการ (Select Car Model)", model_options, key="selected_model")
 
     submodel_df = car_df[car_df["model"] == selected_model].sort_values(by="price")
