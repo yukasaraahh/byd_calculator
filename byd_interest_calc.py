@@ -113,6 +113,11 @@ image_url_for_display = None
 price = 0
 input_valid = False
 
+# ✅ Percent slider data - always defined
+percent_options_raw = sorted(down_payment_df['down_payment'].unique())
+percent_options = [int(x) for x in percent_options_raw if not pd.isna(x)]
+default_percent = 10 if 10 in percent_options else percent_options[0]
+
 # ✅ Image render helper
 def render_image():
     global image_url_for_display
@@ -181,30 +186,27 @@ with col_inputs:
                 st.warning("⚠️ กรุณากรอกจำนวนเงินดาวน์ให้ถูกต้อง")
         else:
             options = sorted(down_payment_df['down_payment'].unique())
-            percent_options = [int(x) for x in options]
+            percent_options = [int(x) for x in options if not pd.isna(x)]
             default_value = 10 if 10 in percent_options else percent_options[0]
-            
+
             selected_percent = st.select_slider(
                 "เลือกเปอร์เซ็นต์เงินดาวน์",
                 options=percent_options,
-                value=default_value,
+                value=st.session_state.get("dp_percent_slider", default_value),
                 key="dp_percent_slider"
             )
-            
+
             down_percent = float(selected_percent)
             down_payment_amount = (down_percent / 100) * price
             input_valid = True
-
 
         st.caption(f"💸 เงินดาวน์ที่เลือก: ฿{down_payment_amount:,.0f} ({int(down_percent)}%)")
 
         period_options = [48, 60, 72, 84]
         period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน)", period_options, key="period_months")
 
-        # ✅ Submit button
         submitted = st.form_submit_button("🧮 คำนวณค่างวด (Calculate Payment)")
 
-        # ✅ Set session state to show result
         if submitted:
             st.session_state.show_result = True
 
