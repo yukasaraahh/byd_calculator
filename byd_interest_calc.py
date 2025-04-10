@@ -162,7 +162,7 @@ with col_inputs:
         selected_submodel = st.selectbox("เลือกรุ่นย่อย (Select Submodel)", submodel_options, key="selected_submodel", index=submodel_index)
 
         car_row = car_df[(car_df["model"] == selected_model) & (car_df["sub model"] == selected_submodel)]
-        price = car_row["price"].values[0] if not car_row.empty else 0
+        price = car_row["price"].values[0] 
         image_url_for_display = convert_drive_link_to_direct_image_url(car_row['image_url'].values[0])
 
         st.metric(label="💰 ราคาจำหน่าย (Car Price)", value=f"฿{price:,.2f}")
@@ -176,6 +176,14 @@ with col_inputs:
         down_percent = 0.0
         input_valid = False
 
+        if "last_input_type" in st.session_state and st.session_state.last_input_type != input_type:
+            st.session_state.show_result = False
+        st.session_state.last_input_type = input_type
+        
+        down_payment_amount = 0.0
+        down_percent = 0.0
+        input_valid = False
+        
         if input_type == "จำนวนเงิน (Amount - THB)":
             raw_input = st.text_input("กรอกจำนวนเงินดาวน์", value=f"{price*0.1:,.0f}", key="dp_amount_thb")
             try:
@@ -188,25 +196,25 @@ with col_inputs:
             options = sorted(down_payment_df['down_payment'].unique())
             percent_options = [int(x) for x in options if not pd.isna(x)]
             default_value = 10 if 10 in percent_options else percent_options[0]
-
+        
             selected_percent = st.select_slider(
                 "เลือกเปอร์เซ็นต์เงินดาวน์",
                 options=percent_options,
                 value=st.session_state.get("dp_percent_slider", default_value),
                 key="dp_percent_slider"
             )
-
+        
             down_percent = float(selected_percent)
             down_payment_amount = (down_percent / 100) * price
             input_valid = True
-
+        
         st.caption(f"💸 เงินดาวน์ที่เลือก: ฿{down_payment_amount:,.0f} ({int(down_percent)}%)")
-
+        
         period_options = [48, 60, 72, 84]
         period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน)", period_options, key="period_months")
-
+        
         submitted = st.form_submit_button("🧮 คำนวณค่างวด (Calculate Payment)")
-
+        
         if submitted:
             st.session_state.show_result = True
 
