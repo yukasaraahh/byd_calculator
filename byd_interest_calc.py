@@ -186,10 +186,6 @@ with col_img:
     elif price > 0:
         st.info("ℹ️ No image available for this model.")
     
-# --------- Image Column ---------
-with col_img:
-    st.markdown("#### Selected Car")
-    render_image()
 
 # --------- Calculations & Results ---------
 st.markdown("---")
