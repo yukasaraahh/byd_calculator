@@ -134,57 +134,51 @@ st.title("🚗 โปรแกรมคํานวณค่างวดรถ B
 col_img, col_inputs = st.columns([4, 2])
 
 # --------- Input Column ---------
-with st.container():
-    st.markdown("""
-        <div style="background-color: #f9f9f9; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px;">
-        <h4>🚗 เลือกรุ่นรถที่สนใจ</h4>
-        """, unsafe_allow_html=True)
+model_options = sorted(car_df["model"].unique())
+selected_model = st.selectbox("เลือกรุ่นรถที่ต้องการ (Select Car Model)", model_options, key="selected_model")
 
-    model_options = sorted(car_df["model"].unique())
-    selected_model = st.selectbox("เลือกรุ่นรถที่ต้องการ (Select Car Model)", model_options, key="selected_model")
+submodel_df = car_df[car_df["model"] == selected_model].sort_values(by="price")
+submodel_options = submodel_df["sub model"].tolist()
+selected_submodel = st.selectbox("เลือกรุ่นย่อย (Select Submodel)", submodel_options, key="selected_submodel")
 
-    submodel_df = car_df[car_df["model"] == selected_model].sort_values(by="price")
-    submodel_options = submodel_df["sub model"].tolist()
+# Get car row, price, and image
+car_row = car_df[(car_df["model"] == selected_model) & (car_df["sub model"] == selected_submodel)]
+price = car_row["price"].values[0] if not car_row.empty else 0
+image_url_for_display = convert_drive_link_to_direct_image_url(car_row["image_url"].values[0]) if not car_row.empty else None
 
-    selected_submodel = st.selectbox("เลือกรุ่นย่อย (Select Submodel)", submodel_options, key="selected_submodel")
+st.metric(label="💰 ราคาจำหน่าย (Car Price)", value=f"฿{price:,.2f}")
 
-    # Get car row, price, and image
-    car_row = car_df[(car_df["model"] == selected_model) & (car_df["sub model"] == selected_submodel)]
-    price = car_row["price"].values[0] if not car_row.empty else 0
-    image_url_for_display = convert_drive_link_to_direct_image_url(car_row["image_url"].values[0]) if not car_row.empty else None
+st.markdown("#### 💵 คำนวณค่างวด (Estimate Your Monthly Payment)")
 
-    st.metric(label="💰 ราคาจำหน่าย (Car Price)", value=f"฿{price:,.2f}")
+input_type = st.radio("เลือกรูปแบบการวางเงินดาวน์", ["จำนวนเงิน (Amount - THB)", "เปอร์เซ็นต์ (%) (Percentage)"], key="dp_type", horizontal=True)
 
-    st.markdown("#### 💵 คำนวณค่างวด (Estimate Your Monthly Payment)")
+down_payment_amount = 0.0
+down_percent = 0.0
+input_valid = False
 
-    input_type = st.radio("เลือกรูปแบบการวางเงินดาวน์", ["จำนวนเงิน (Amount - THB)", "เปอร์เซ็นต์ (%) (Percentage)"], key="dp_type", horizontal=True)
+if input_type == "จำนวนเงิน (Amount - THB)":
+    raw_input = st.text_input("กรอกจำนวนเงินดาวน์", value=f"{price*0.1:,.0f}", key="dp_amount_thb")
+    try:
+        down_payment_amount = float(raw_input.replace(",", ""))
+        down_percent = (down_payment_amount / price) * 100
+        input_valid = 5 <= down_percent <= 100
+    except ValueError:
+        st.warning("⚠️ กรุณากรอกจำนวนเงินดาวน์ให้ถูกต้อง")
+else:
+    percent_options = [int(x) for x in sorted(down_payment_df['down_payment'].dropna().unique())]
+    default_percent = 10 if 10 in percent_options else percent_options[0]
+    selected_percent = st.select_slider("เลือกเปอร์เซ็นต์เงินดาวน์", options=percent_options, value=default_percent, key="dp_percent_slider")
+    down_percent = float(selected_percent)
+    down_payment_amount = (down_percent / 100) * price
+    input_valid = True
 
-    down_payment_amount = 0.0
-    down_percent = 0.0
-    input_valid = False
+st.caption(f"💸 เงินดาวน์ที่เลือก: ฿{down_payment_amount:,.0f} ({int(down_percent)}%)")
 
-    if input_type == "จำนวนเงิน (Amount - THB)":
-        raw_input = st.text_input("กรอกจำนวนเงินดาวน์", value=f"{price*0.1:,.0f}", key="dp_amount_thb")
-        try:
-            down_payment_amount = float(raw_input.replace(",", ""))
-            down_percent = (down_payment_amount / price) * 100
-            input_valid = 5 <= down_percent <= 100
-        except ValueError:
-            st.warning("⚠️ กรุณากรอกจำนวนเงินดาวน์ให้ถูกต้อง")
-    else:
-        percent_options = [int(x) for x in sorted(down_payment_df['down_payment'].dropna().unique())]
-        default_percent = 10 if 10 in percent_options else percent_options[0]
-        selected_percent = st.select_slider("เลือกเปอร์เซ็นต์เงินดาวน์", options=percent_options, value=default_percent, key="dp_percent_slider")
-        down_percent = float(selected_percent)
-        down_payment_amount = (down_percent / 100) * price
-        input_valid = True
+period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน)", [48, 60, 72, 84], key="period_months")
+submitted = st.button("🧮 คำนวณค่างวด (Calculate Payment)")
 
-    st.caption(f"💸 เงินดาวน์ที่เลือก: ฿{down_payment_amount:,.0f} ({int(down_percent)}%)")
-
-    period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน)", [48, 60, 72, 84], key="period_months")
-    submitted = st.button("🧮 คำนวณค่างวด (Calculate Payment)")
-
-    st.markdown("</div>", unsafe_allow_html=True)  # close the card
+if submitted:
+    st.session_state.show_result = True
     
 # --------- Image Column ---------
 with col_img:
