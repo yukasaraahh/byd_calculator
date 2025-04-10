@@ -183,9 +183,14 @@ with col_inputs:
             options = sorted(down_payment_df['down_payment'].unique())
             percent_options = [int(x) for x in options]
             default_value = 10 if 10 in percent_options else percent_options[0]
-
-            selected_percent = st.select_slider("เลือกเปอร์เซ็นต์เงินดาวน์", options=percent_options, value=default_value, key="dp_percent_slider")
-
+            
+            selected_percent = st.select_slider(
+                "เลือกเปอร์เซ็นต์เงินดาวน์",
+                options=percent_options,
+                value=default_value,
+                key="dp_percent_slider"
+            )
+            
             down_percent = float(selected_percent)
             down_payment_amount = (down_percent / 100) * price
             input_valid = True
