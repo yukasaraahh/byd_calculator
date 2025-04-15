@@ -168,7 +168,7 @@ with col_inputs:
             down_percent = (down_payment_amount / price) * 100
             input_valid = 5 <= down_percent <= 100
         except ValueError:
-            st.warning("⚠️ กรุณากรอกจำนวนเงินดาวน์ให้ถูกต้อง (Please enter a valid down payment amount)")
+            st.warning("⚠️ โปรดใส่เงินดาวน์ขั้นต่ำที่ 5% ของราคารถ (Please enter a down payment of at least 5% of the car price)")
     else:
         percent_options = [int(x) for x in sorted(down_payment_df['down_payment'].dropna().unique())]
         default_percent = 10 if 10 in percent_options else percent_options[0]
@@ -193,6 +193,7 @@ with col_img:
     
 
 # --------- Calculations & Results ---------
+period_options = [48, 60, 72, 84]
 st.markdown("---")
 
 if st.session_state.show_result and input_valid and price > 0 and not down_payment_df.empty:
@@ -270,7 +271,7 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
          else:
              st.error("❌ No financing options available for the provided down payment percentage.")
 elif not input_valid:
-    st.info("ℹ️ Please provide valid down payment details above to see calculations.")
+    st.info("❌ โปรดใส่เงินดาวน์ขั้นต่ำที่ 5% ของราคารถ (Please enter a down payment of at least 5% of the car price)")
 elif price <= 0:
     st.info("ℹ️ Please select a valid car with a price > 0.")
 elif down_payment_df.empty:
