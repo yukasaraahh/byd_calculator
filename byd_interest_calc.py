@@ -235,59 +235,59 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
                  df_30.insert(0, "Option", range(1, len(df_30) + 1))
                  df_30.set_index("Option", inplace=True)
                  st.success(f"✅ With {down_percent:.2f}% down payment, you qualify for these 30% plan options (minimum interest condition met):")
-               
                  table_html = """
-                    <style>
-                    .custom-table {
-                        border-collapse: collapse;
-                        width: 100%;
-                        font-family: 'Noto Sans Thai', sans-serif;
-                        margin-top: 1rem;
-                        border-radius: 10px;
-                        overflow: hidden;
-                    }
-                    .custom-table th {
-                        background-color: #f0f2f6;
-                        text-align: left;
-                        padding: 12px 16px;
-                        font-weight: 600;
-                        font-size: 15px;
-                    }
-                    .custom-table td {
-                        padding: 10px 16px;
-                        border-bottom: 1px solid #eaeaea;
-                        font-size: 14.5px;
-                    }
-                    .custom-table td:last-child {
-                        color: #e63946;
-                        font-weight: bold;
-                    }
-                    </style>
-                    <table class="custom-table">
-                        <thead>
-                            <tr>
-                                <th>📌 Option</th>
-                                <th>📆 Period</th>
-                                <th>💰 Interest (30% Plan Rate)</th>
-                                <th>🧾 Monthly Installment</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                <style>
+                .custom-table {
+                    border-collapse: collapse;
+                    width: 100%;
+                    font-family: 'Noto Sans Thai', sans-serif;
+                    margin-top: 1rem;
+                    border-radius: 10px;
+                    overflow: hidden;
+                }
+                .custom-table th {
+                    background-color: #f0f2f6;
+                    text-align: left;
+                    padding: 12px 16px;
+                    font-weight: 600;
+                    font-size: 15px;
+                }
+                .custom-table td {
+                    padding: 10px 16px;
+                    border-bottom: 1px solid #eaeaea;
+                    font-size: 14.5px;
+                }
+                .custom-table td:last-child {
+                    color: #e63946;
+                    font-weight: bold;
+                }
+                </style>
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>📌 Option</th>
+                            <th>📆 Period</th>
+                            <th>💰 Interest (30% Plan Rate)</th>
+                            <th>🧾 Monthly Installment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                """
+                for i, row in df_30.reset_index().iterrows():
+                    table_html += f"""
+                        <tr>
+                            <td>{i + 1}</td>
+                            <td><strong>{row['Period']}</strong></td>
+                            <td>{row['Interest (30% Plan Rate)']}</td>
+                            <td>{row['Monthly Installment']}</td>
+                        </tr>
                     """
-                    for i, row in df_30.reset_index().iterrows():
-                        table_html += f"""
-                            <tr>
-                                <td>{i+1}</td>
-                                <td><strong>{row['Period']}</strong></td>
-                                <td>{row['Interest (30% Plan Rate)']}</td>
-                                <td>{row['Monthly Installment']}</td>
-                            </tr>
-                        """
-                    table_html += """
-                        </tbody>
-                    </table>
-                    """
-                    st.markdown(table_html, unsafe_allow_html=True)
+                table_html += """
+                    </tbody>
+                </table>
+                """
+                st.markdown(table_html, unsafe_allow_html=True)
+            
              
              else:
                  st.warning("😕 ไม่มีงวดผ่อนที่เข้าเงื่อนไขในแผนดาวน์ 30% เนื่องจากดอกเบี้ยที่คำนวณไม่ถึงเกณฑ์ขั้นต่ำที่กำหนด โปรดลองใส่เงินดาวน์ที่ต่ำลงเพื่อดูแผนผ่อนชำระอื่น (No periods qualify for the 30% plan because the calculated interest does not exceed the minimum threshold for any period. Please try entering a lower down payment to view other installment options.)")
