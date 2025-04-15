@@ -235,7 +235,33 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
                  df_30.insert(0, "Option", range(1, len(df_30) + 1))
                  df_30.set_index("Option", inplace=True)
                  st.success(f"✅ With {down_percent:.2f}% down payment, you qualify for these 30% plan options (minimum interest condition met):")
-                 st.table(df_30)
+                 styled_table = f"""
+<div style="margin-top: 1rem; border-radius: 10px; overflow: hidden;">
+  <table style="width: 100%; border-collapse: collapse; font-family: 'Noto Sans Thai', sans-serif;">
+    <thead style="background-color: #f0f2f6; text-align: left;">
+      <tr>
+        <th style="padding: 12px 16px;">📌 Option</th>
+        <th style="padding: 12px 16px;">📆 Period</th>
+        <th style="padding: 12px 16px;">💰 Interest (30% Plan Rate)</th>
+        <th style="padding: 12px 16px;">🧾 Monthly Installment</th>
+      </tr>
+    </thead>
+    <tbody>
+      {''.join([
+        f"""<tr style="border-bottom: 1px solid #eaeaea;">
+              <td style="padding: 10px 16px;">{i+1}</td>
+              <td style="padding: 10px 16px; font-weight: bold;">{row['Period']}</td>
+              <td style="padding: 10px 16px;">{row['Interest (30% Plan Rate)']}</td>
+              <td style="padding: 10px 16px; color: #e63946; font-weight: bold;">{row['Monthly Installment']}</td>
+            </tr>"""
+        for i, row in df_30.reset_index().iterrows()
+      ])}
+    </tbody>
+  </table>
+</div>
+"""
+
+st.markdown(styled_table, unsafe_allow_html=True)
              else:
                  st.warning("😕 ไม่มีงวดผ่อนที่เข้าเงื่อนไขในแผนดาวน์ 30% เนื่องจากดอกเบี้ยที่คำนวณไม่ถึงเกณฑ์ขั้นต่ำที่กำหนด โปรดลองใส่เงินดาวน์ที่ต่ำลงเพื่อดูแผนผ่อนชำระอื่น (No periods qualify for the 30% plan because the calculated interest does not exceed the minimum threshold for any period. Please try entering a lower down payment to view other installment options.)")
              
