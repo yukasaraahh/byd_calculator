@@ -177,8 +177,8 @@ with col_inputs:
         down_payment_amount = (down_percent / 100) * price
         input_valid = True
 
-    st.caption(f"💸 เงินดาวน์ที่เลือก (Your Selected Down Payment): ฿{down_payment_amount:,.0f} ({int(down_percent)}%)")
-    period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน) (Select your monthly payment plan (Month))", [48, 60, 72, 84], key="period_months")
+    st.caption(f"💸 เงินดาวน์ที่เลือก : ฿{down_payment_amount:,.0f} ({int(down_percent)}%)")
+    period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน) (Select your monthly payment plan (Month)", [48, 60, 72, 84], key="period_months")
     submitted = st.button("🧮 คำนวณค่างวดของคุณ (Calculate Your Payment)")
 
     if submitted:
@@ -259,7 +259,7 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
                          res_col1.metric("เงินดาวน์ที่เลือก (Your Down Payment)", f"฿{rounded_down_payment:,.0f} ({int(down_percent)}%)")
                          res_col2.metric("อัตราดอกเบี้ย (Interest Rate Applied)", f"{interest_rate:.2f}%", help=f"Based on the nearest qualifying tier: {int(matched_percent)}%")
                          rounded_monthly = math.ceil(monthly_installment)
-                         res_col3.metric("ยอดผ่อนรายเดือน (Monthly Installment)", f"฿{rounded_monthly:,.0f}")
+                         res_col3.metric("ยอดผ่อนรายเดือน (Monthly Installment)", f"฿{rounded_monthly:,.0f} /เดือน")
 
                      except (ValueError, TypeError, ZeroDivisionError) as e:
                          st.error(f"⚠️ Error calculating installment for {period} months: {e}")
