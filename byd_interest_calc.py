@@ -178,7 +178,7 @@ with col_inputs:
         input_valid = True
 
     st.caption(f"💸 เงินดาวน์ที่เลือก : ฿{down_payment_amount:,.0f} ({int(down_percent)}%)")
-    period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน) (Select your monthly payment plan (Month)", [48, 60, 72, 84], key="period_months")
+    period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน) (Select your monthly payment plan)", [48, 60, 72, 84], key="period_months")
     submitted = st.button("🧮 คำนวณค่างวดของคุณ (Calculate Your Payment)")
 
     if submitted:
