@@ -235,56 +235,48 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
                 df_30.insert(0, "Option", range(1, len(df_30) + 1))
                 df_30.set_index("Option", inplace=True)
                 st.success(f"✅ With {down_percent:.2f}% down payment, you qualify for these 30% plan options (minimum interest condition met):")
-                table_html = """
+                 # 🧩 Mobile-friendly style for vertical layout
+                st.markdown("""
                 <style>
-                .custom-table {
-                    border-collapse: collapse;
-                    width: 100%;
-                    font-family: 'Noto Sans Thai', sans-serif;
-                    margin-top: 1rem;
+                .financing-card {
+                    border: 1px solid #e0e0e0;
                     border-radius: 10px;
-                    overflow: hidden;
+                    padding: 16px;
+                    margin-bottom: 12px;
+                    background-color: #ffffff;
+                    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+                    font-family: 'Noto Sans Thai', sans-serif;
                 }
-                .custom-table th {
-                    background-color: #f0f2f6;
-                    text-align: left;
-                    padding: 12px 16px;
+                .financing-card h4 {
+                    margin: 0 0 10px;
+                    font-size: 16px;
                     font-weight: 600;
-                    font-size: 15px;
                 }
-                .custom-table td {
-                    padding: 10px 16px;
-                    border-bottom: 1px solid #eaeaea;
+                .financing-card .item {
+                    margin: 6px 0;
                     font-size: 14.5px;
                 }
-                .custom-table td:last-child {
-                    color: #e63946;
+                .financing-card .item strong {
+                    color: #333;
+                }
+                .financing-card .price {
+                    font-size: 16px;
                     font-weight: bold;
+                    color: #e63946;
                 }
                 </style>
-                <table class="custom-table">
-                    <thead>
-                        <tr>
-                            <th>#️⃣</th>
-                            <th>📅 ระยะเวลาผ่อน<br><small>(Term)</small></th>
-                            <th>📈 อัตราดอกเบี้ย<br><small>(Interest Rate)</small></th>
-                            <th>💳 ยอดผ่อนรายเดือน<br><small>(Monthly Payment)</small></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                """
+                """, unsafe_allow_html=True)
+            
+                # 🪄 Render each option as a vertical card
                 for i, row in df_30.reset_index().iterrows():
-                    table_html += f"""<tr>
-                                        <td>{i + 1}</td>
-                                        <td><strong>{row['Period']}</strong></td>
-                                        <td>{row['Interest (30% Plan Rate)']}</td>
-                                        <td>{row['Monthly Installment']}</td>
-                                        </tr>"""
-                table_html += """
-                    </tbody>
-                </table>
-                """
-                st.markdown(table_html, unsafe_allow_html=True)
+                    st.markdown(f"""
+                    <div class="financing-card">
+                        <h4>📌 ตัวเลือก {i + 1} (Option {i + 1})</h4>
+                        <div class="item">📅 <strong>ระยะเวลาผ่อน:</strong> {row['Period']}</div>
+                        <div class="item">📈 <strong>อัตราดอกเบี้ย:</strong> {row['Interest (30% Plan Rate)']}</div>
+                        <div class="item price">💳 ยอดผ่อนรายเดือน: {row['Monthly Installment']} / เดือน</div>
+                    </div>
+                    """, unsafe_allow_html=True)
              else:
                  st.warning("😕 ไม่มีงวดผ่อนที่เข้าเงื่อนไขในแผนดาวน์ 30% เนื่องจากดอกเบี้ยที่คำนวณไม่ถึงเกณฑ์ขั้นต่ำที่กำหนด โปรดลองใส่เงินดาวน์ที่ต่ำลงเพื่อดูแผนผ่อนชำระอื่น (No periods qualify for the 30% plan because the calculated interest does not exceed the minimum threshold for any period. Please try entering a lower down payment to view other installment options.)")
              
