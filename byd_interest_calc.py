@@ -273,16 +273,14 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
                     </thead>
                     <tbody>
                 """
-				for i, row in df_30.reset_index().iterrows():
-                    table_html += f"""
-                    	<tr>
-    						<td>{i + 1}</td>
-                            <td><strong>{row['Period']}</strong></td>
-                            <td>{row['Interest (30% Plan Rate)']}</td>
-                            <td>{row['Monthly Installment']}</td>
-						</tr>
-					"""
-					table_html += """
+                for i, row in df_30.reset_index().iterrows():
+                    table_html += f"""<tr>
+                                        <td>{i + 1}</td>
+                                        <td><strong>{row['Period']}</strong></td>
+                                        <td>{row['Interest (30% Plan Rate)']}</td>
+                                        <td>{row['Monthly Installment']}</td>
+                                        </tr>"""
+                table_html += """
                     </tbody>
                 </table>
                 """
