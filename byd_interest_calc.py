@@ -234,7 +234,8 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
                 df_30 = pd.DataFrame(qualified_periods_30_plan)
                 df_30.insert(0, "Option", range(1, len(df_30) + 1))
                 df_30.set_index("Option", inplace=True)
-                st.success(f"✅ With {down_percent:.2f}% down payment, you qualify for these 30% plan options (minimum interest condition met):")
+                st.success(f"✅ <strong>ด้วยเงินดาวน์ {down_payment_amount:,.0f} บาท ({down_percent:.2f}%)</strong> แผนที่คุณเลือก (เช่น {period} เดือน) ไม่สามารถทำไฟแนนซ์ได้ <br>
+แต่คุณยังสามารถเลือกผ่อนชำระในระยะยาวได้ตามแผนด้านล่างที่ผ่านเกณฑ์ดอกเบี้ยขั้นต่ำ:")
                  # 🧩 Mobile-friendly style for vertical layout
                 st.markdown("""
                 <style>
@@ -271,7 +272,7 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
                 for i, row in df_30.reset_index().iterrows():
                     st.markdown(f"""
                     <div class="financing-card">
-                        <h4>📌 ตัวเลือก {i + 1} (Option {i + 1})</h4>
+                        <h4>📌 Option {i + 1}</h4>
                         <div class="item">📅 <strong>ระยะเวลาผ่อน:</strong> {row['Period']}</div>
                         <div class="item">📈 <strong>อัตราดอกเบี้ย:</strong> {row['Interest (30% Plan Rate)']}</div>
                         <div class="item price">💳 ยอดผ่อนรายเดือน: {row['Monthly Installment']} / เดือน</div>
