@@ -265,10 +265,10 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
                 <table class="custom-table">
                     <thead>
                         <tr>
-                            <th>📌 Option</th>
+                            <th>#️⃣</th>
                             <th>📅 ระยะเวลาผ่อน<br><small>(Term)</small></th>
-                            <th>💰 Interest (30% Plan Rate)</th>
-                            <th>🧾 Monthly Installment</th>
+                            <th>📈 อัตราดอกเบี้ย<br><small>(Interest Rate)</small></th>
+                            <th>💳 ยอดผ่อนรายเดือน<br><small>(Monthly Payment)</small></th>
                         </tr>
                     </thead>
                     <tbody>
