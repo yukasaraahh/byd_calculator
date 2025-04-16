@@ -281,14 +281,12 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
                             <td>{row['Interest (30% Plan Rate)']}</td>
                             <td>{row['Monthly Installment']}</td>
                         </tr>
+                    """
+                table_html += """
+                    </tbody>
+                </table>
                 """
-            table_html += """
-                </tbody>
-            </table>
-            """
-            st.markdown(table_html, unsafe_allow_html=True)
-            
-             
+                st.markdown(table_html, unsafe_allow_html=True)
              else:
                  st.warning("😕 ไม่มีงวดผ่อนที่เข้าเงื่อนไขในแผนดาวน์ 30% เนื่องจากดอกเบี้ยที่คำนวณไม่ถึงเกณฑ์ขั้นต่ำที่กำหนด โปรดลองใส่เงินดาวน์ที่ต่ำลงเพื่อดูแผนผ่อนชำระอื่น (No periods qualify for the 30% plan because the calculated interest does not exceed the minimum threshold for any period. Please try entering a lower down payment to view other installment options.)")
              
