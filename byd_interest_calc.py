@@ -266,7 +266,7 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
                     <thead>
                         <tr>
                             <th>📌 Option</th>
-                            <th>📆 Period</th>
+                            <th>📅 ระยะเวลาผ่อน<br><small>(Term)</small></th>
                             <th>💰 Interest (30% Plan Rate)</th>
                             <th>🧾 Monthly Installment</th>
                         </tr>
