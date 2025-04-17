@@ -215,48 +215,41 @@ with col_inputs:
     with col_center:
         st.markdown("""
         <style>
-        .stForm button {
-            background-color: #e63946 !important;
-            color: white !important;
-            font-weight: bold;
+        .custom-button-wrapper {
+            display: flex;
+            justify-content: center;
+
+        }
+        .stButton > button.custom-button {
+            background-color: #e63946;
+            color: white;
             border: none;
             padding: 16px 30px;
-            font-size: 18px;
             border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
             cursor: pointer;
             width: 100%;
-            max-width: 100%;
-            text-align: center;
-            transition: all 0.2s ease;
-            font-family: 'Noto Sans Thai', sans-serif;
+            max-width: 380px;
             line-height: 1.4;
-            display: block;
-            margin: 1.5rem auto;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            font-family: 'Noto Sans Thai', sans-serif;
+            white-space: pre-line;
         }
-        .stForm button:hover {
-            background-color: #d62839 !important;
+        .stButton > button.custom-button:hover {
+            background-color: #d62839;
             transform: scale(1.02);
         }
-        section[data-testid="stForm"] {
-            background-color: transparent !important;
-            box-shadow: none !important;
-            border: none !important;
-            padding: 0 !important;
-            margin: 0 auto !important;
-            width: 100% !important;
-            max-width: 100% !important;
-        }
         </style>
+        <div class="custom-button-wrapper">
         """, unsafe_allow_html=True)
-        
-        with st.form("calc_form", clear_on_submit=False):
-            submitted = st.form_submit_button(
-                label="🧮 คำนวณค่างวดของคุณ\n(Calculate Your Payment)",
-                use_container_width=True
-            )
+    
+        submitted = st.button("🧮 คำนวณค่างวดของคุณ\n(Calculate Your Payment)", key="custom_calc_btn", type="primary")
+        st.markdown("</div>", unsafe_allow_html=True)
     
         if submitted:
             st.session_state.show_result = True
+
     
 with col_img:
     st.markdown("#### รถที่คุณเลือก (Your Selected Model)")
