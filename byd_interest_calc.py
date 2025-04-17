@@ -215,15 +215,10 @@ with col_inputs:
     col_center = st.columns([1, 2, 1])[1]
     with col_center:
         st.markdown('<div class="custom-button-wrapper">', unsafe_allow_html=True)
-        submitted = st.button("🧮 คำนวณค่างวดของคุณ\n(Calculate Your Payment)", key="custom_calc_btn")
+        if st.button("🧮 คำนวณค่างวดของคุณ\n(Calculate Your Payment)", key="custom_calc_btn"):
+            st.session_state.show_result = True
         st.markdown('</div>', unsafe_allow_html=True)
     
-    if submitted:
-        st.session_state.show_result = True
-    
-    # Now check if submitted
-    submitted = st.session_state.submitted
-
 with col_img:
     st.markdown("#### รถที่คุณเลือก (Your Selected Model)")
     if pd.notna(image_url_for_display) and isinstance(image_url_for_display, str) and image_url_for_display.startswith("http"):
