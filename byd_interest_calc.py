@@ -211,12 +211,43 @@ with col_inputs:
 
     st.caption(f"💸 เงินดาวน์ที่เลือก : ฿{down_payment_amount:,.0f} ({int(down_percent)}%)")
     period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน) (Select your monthly payment plan)", [48, 60, 72, 84], key="period_months")
-    col_center = st.columns([1, 2, 1])[1]
-    with col_center:
-        st.markdown('<div class="custom-button-wrapper">', unsafe_allow_html=True)
-        if st.button("🧮 คำนวณค่างวดของคุณ\n(Calculate Your Payment)", key="custom_calc_btn"):
-            st.session_state.show_result = True
-        st.markdown('</div>', unsafe_allow_html=True)
+    center_button_col = st.columns([1, 2, 1])[1]
+    with center_button_col:
+        with st.form("submit_form"):
+            st.markdown("""
+            <style>
+            .btn-calc {
+                background-color: #e63946;
+                color: white;
+                font-weight: bold;
+                border: none;
+                padding: 16px 30px;
+                font-size: 18px;
+                border-radius: 12px;
+                cursor: pointer;
+                width: 100%;
+                max-width: 380px;
+                text-align: center;
+                transition: all 0.2s ease;
+                font-family: 'Noto Sans Thai', sans-serif;
+                line-height: 1.4;
+            }
+            .btn-calc:hover {
+                background-color: #d62839;
+                transform: scale(1.02);
+            }
+            .btn-container {
+                display: flex;
+                justify-content: center;
+                margin: 1.5rem 0;
+            }
+            </style>
+            <div class="btn-container">
+                <button type="submit" class="btn-calc">🧮 คำนวณค่างวดของคุณ<br><small>(Calculate Your Payment)</small></button>
+            </div>
+            """, unsafe_allow_html=True)
+            submitted = st.form_submit_button("")
+
     
 with col_img:
     st.markdown("#### รถที่คุณเลือก (Your Selected Model)")
