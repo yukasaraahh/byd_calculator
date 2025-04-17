@@ -211,9 +211,9 @@ with col_inputs:
 
     st.caption(f"💸 เงินดาวน์ที่เลือก : ฿{down_payment_amount:,.0f} ({int(down_percent)}%)")
     period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน) (Select your monthly payment plan)", [48, 60, 72, 84], key="period_months")
-    center_button_col = st.columns([1, 2, 1])[1]
-    with center_button_col:
-        with st.form("submit_form"):
+    col_center = st.columns([1, 2, 1])[1]
+    with col_center:
+        with st.form("calc_form", clear_on_submit=False):
             st.markdown("""
             <style>
             .btn-calc {
@@ -241,12 +241,23 @@ with col_inputs:
                 justify-content: center;
                 margin: 1.5rem 0;
             }
+            /* Hide the form box */
+            section[data-testid="stForm"] {
+                box-shadow: none;
+                border: none;
+                padding: 0;
+            }
             </style>
             <div class="btn-container">
                 <button type="submit" class="btn-calc">🧮 คำนวณค่างวดของคุณ<br><small>(Calculate Your Payment)</small></button>
             </div>
             """, unsafe_allow_html=True)
-            submitted = st.form_submit_button("")
+    
+            submitted = st.form_submit_button()
+    
+    # Only update session state if user just submitted
+    if submitted:
+        st.session_state.show_result = True
 
     
 with col_img:
@@ -262,6 +273,7 @@ period_options = [48, 60, 72, 84]
 st.markdown("---")
 
 if st.session_state.show_result and input_valid and price > 0 and not down_payment_df.empty:
+
     # If the down payment equals (or exceeds) the car's price, show an info message.
     if down_payment_amount >= price:
          st.info("เงินดาวน์เท่ากับราคารถ ไม่สามารถจัดไฟแนนซ์ได้ (The down payment is equal to the car's price. No financing is required.)")
