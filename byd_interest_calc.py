@@ -13,38 +13,8 @@ st.markdown("""
     .css-1d391kg, .css-ffhzg2, .css-1cpxqw2, .css-1offfwp, .stButton button {
         font-family: 'Noto Sans Thai', sans-serif !important;
     }
-    .custom-button-wrapper {
-        display: flex;
-        justify-content: center;
 
-    }
-    .stButton > button.custom-button {
-        background-color: #e63946;
-        color: white;
-        border: none;
-        padding: 12px 20px;
-        border-radius: 10px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        width: 100%;
-        max-width: 320px;
-        line-height: 1.3;
-        transition: background-color 0.3s ease, transform 0.1s ease;
-        font-family: 'Noto Sans Thai', sans-serif;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-        white-space: pre-line;
-    }
-    .stButton > button.custom-button:hover {
-        background-color: #d62839;
-        transform: scale(1.02);
-    }
-    @media only screen and (max-width: 768px) {
-        .stButton > button.custom-button {
-            font-size: 15px;
-            padding: 12px 16px;
-        }
-    }
+
     </style>
 """, unsafe_allow_html=True)
 
