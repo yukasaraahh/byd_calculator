@@ -181,44 +181,9 @@ with col_inputs:
 
     st.caption(f"💸 เงินดาวน์ที่เลือก : ฿{down_payment_amount:,.0f} ({int(down_percent)}%)")
     period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน) (Select your monthly payment plan)", [48, 60, 72, 84], key="period_months")
-    with st.form("calc_form", clear_on_submit=False):
-        # Custom styling for the button
-        st.markdown("""
-        <style>
-        div.stButton > button {
-            background-color: #e63946;
-            color: white;
-            font-weight: bold;
-            border: none;
-            padding: 16px 20px;
-            font-size: 18px;
-            border-radius: 12px;
-            cursor: pointer;
-            width: 100%;
-            text-align: center;
-            transition: all 0.2s ease;
-            font-family: 'Noto Sans Thai', sans-serif;
-            line-height: 1.4;
-        }
-        div.stButton > button:hover {
-            background-color: #d62839;
-            transform: scale(1.02);
-        }
-        section[data-testid="stForm"] {
-            box-shadow: none !important;
-            border: none !important;
-            padding: 0 !important;
-            margin: 1rem 0 0 0 !important;
-        }
-        </style>
-        """, unsafe_allow_html=True)
-    
-        # Seamless calculate button
-        submitted = st.form_submit_button("🧮 คำนวณค่างวดของคุณ\n(Calculate Your Payment)")
-    
-    # ✅ Trigger result display
+    submitted = st.button("🧮 คำนวณค่างวดของคุณ (Calculate Your Payment)")
     if submitted:
-        st.session_state.show_result = True    
+        st.session_state.show_result = True
       
 with col_img:
     st.markdown("#### รถที่คุณเลือก (Your Selected Model)")
