@@ -212,49 +212,14 @@ with col_inputs:
 
     st.caption(f"💸 เงินดาวน์ที่เลือก : ฿{down_payment_amount:,.0f} ({int(down_percent)}%)")
     period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน) (Select your monthly payment plan)", [48, 60, 72, 84], key="period_months")
+    col_center = st.columns([1, 2, 1])[1]
     with col_center:
-        st.markdown("""
-        <style>
-        .custom-button-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-top: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        .custom-button-wrapper button {
-            background-color: #e63946;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 10px;
-            cursor: pointer;
-            width: 100%;
-            max-width: 320px;
-            line-height: 1.3;
-            transition: background-color 0.3s ease, transform 0.1s ease;
-            font-family: 'Noto Sans Thai', sans-serif;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-        }
-        .custom-button-wrapper button:hover {
-            background-color: #d62839;
-            transform: scale(1.02);
-        }
-        </style>
-        """, unsafe_allow_html=True)
-    
-        # Initialize state once
-        if "submitted" not in st.session_state:
-            st.session_state.submitted = False
-    
-        # Display centered button
         st.markdown('<div class="custom-button-wrapper">', unsafe_allow_html=True)
-        submitted = st.button("🧮 คำนวณค่างวดของคุณ\n(Calculate Your Payment)", key="custom_calc_btn", type="primary")
+        submitted = st.button("🧮 คำนวณค่างวดของคุณ\n(Calculate Your Payment)", key="custom_calc_btn")
         st.markdown('</div>', unsafe_allow_html=True)
-        
-        if submitted:
-            st.session_state.show_result = True
+    
+    if submitted:
+        st.session_state.show_result = True
     
     # Now check if submitted
     submitted = st.session_state.submitted
