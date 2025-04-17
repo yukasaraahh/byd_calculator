@@ -214,10 +214,26 @@ with col_inputs:
     period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน) (Select your monthly payment plan)", [48, 60, 72, 84], key="period_months")
     col_center = st.columns([1, 2, 1])[1]
     with col_center:
-        with st.container():
-            st.markdown('<div class="custom-button-container">', unsafe_allow_html=True)
-            submitted = st.button("🧮 คำนวณค่างวดของคุณ (Calculate Your Payment)", key="custom_button")
-            st.markdown('</div>', unsafe_allow_html=True)
+        clicked = st.markdown("""
+        <div style="text-align:center; margin-top: 12px;">
+            <form action="" method="post">
+                <button type="submit" name="submit_button" style="
+                    font-family: 'Noto Sans Thai', sans-serif;
+                    font-size: 16px;
+                    background-color: #ffffff;
+                    border: 1.5px solid #d0d0d0;
+                    border-radius: 12px;
+                    padding: 14px 26px;
+                    cursor: pointer;
+                    width: 100%;
+                    max-width: 360px;
+                    transition: all 0.3s ease;
+                " onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='#ffffff'">
+                    🧮 คำนวณค่างวดของคุณ <br><small>(Calculate Your Payment)</small>
+                </button>
+            </form>
+        </div>
+        """, unsafe_allow_html=True)
 
     if submitted:
         st.session_state.show_result = True
