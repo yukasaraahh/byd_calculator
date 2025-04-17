@@ -220,7 +220,10 @@ with col_inputs:
         </button>
     </form>
     """, unsafe_allow_html=True)
-
+    # Use st.query_params correctly (no deprecated function)
+    params = st.query_params
+    if "calculate" in params and params["calculate"] == "1":
+        st.session_state.show_result = True
       
 with col_img:
     st.markdown("#### รถที่คุณเลือก (Your Selected Model)")
