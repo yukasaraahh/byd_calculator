@@ -9,44 +9,39 @@ st.markdown("""
         font-family: 'Noto Sans Thai', sans-serif !important;
     }
 
-  html, body, div, span, input, select, button, label, textarea,
+    html, body, div, span, input, select, button, label, textarea,
     .css-1d391kg, .css-ffhzg2, .css-1cpxqw2, .css-1offfwp, .stButton button {
         font-family: 'Noto Sans Thai', sans-serif !important;
     }
-    .custom-button-container {
+    .custom-button-wrapper {
         display: flex;
         justify-content: center;
-        margin-top: 1.5rem;
-        margin-bottom: 2rem;
+        margin-top: 1rem;
+        margin-bottom: 1.5rem;
     }
-    .stButton > button.custom-button {
-        background-color: #0066cc;
+    .custom-button-wrapper button {
+        background-color: #e63946;
         color: white;
         border: none;
-        padding: 0.75rem 2rem;
-        border-radius: 8px;
+        padding: 14px 24px;
         font-size: 16px;
-        font-weight: 600;
-        transition: background-color 0.3s ease, transform 0.1s ease;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        white-space: pre-line;
-        max-width: 400px;
+        font-weight: bold;
+        border-radius: 10px;
+        cursor: pointer;
         width: 100%;
+        max-width: 360px;
+        line-height: 1.4;
+        transition: background-color 0.3s ease, transform 0.1s ease;
+        font-family: 'Noto Sans Thai', sans-serif;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+        white-space: pre-line;
     }
-    .stButton > button.custom-button:hover {
-        background-color: #004c99;
+    .custom-button-wrapper button:hover {
+        background-color: #c9303e;
         transform: scale(1.02);
-    }
-    @media only screen and (max-width: 768px) {
-        .stButton > button.custom-button {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            font-size: 15px;
-        }
     }
     </style>
 """, unsafe_allow_html=True)
-
 
 import pandas as pd
 import io
