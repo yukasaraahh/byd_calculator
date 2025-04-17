@@ -368,7 +368,7 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
                          res_col2.metric("อัตราดอกเบี้ย (Interest Rate Applied)", f"{interest_rate:.2f}%", help=f"Based on the nearest qualifying tier: {int(matched_percent)}%")
                          rounded_monthly = math.ceil(monthly_installment)
                          res_col3.metric("ยอดผ่อนรายเดือน (Monthly Installment)", f"฿{rounded_monthly:,.0f} /เดือน")
-# 👇 Smooth scroll here
+
     st.markdown("""
         <script>
         window.addEventListener('load', function() {
