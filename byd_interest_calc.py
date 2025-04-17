@@ -243,10 +243,9 @@ with col_img:
 
 # --------- Calculations & Results ---------
 period_options = [48, 60, 72, 84]
-st.markdown('<div id="result-section"></div>', unsafe_allow_html=True)
+st.markdown('<div id="result"></div>', unsafe_allow_html=True)
 
 if st.session_state.show_result and input_valid and price > 0 and not down_payment_df.empty:
-    
 
     # If the down payment equals (or exceeds) the car's price, show an info message.
     if down_payment_amount >= price:
@@ -368,7 +367,6 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
                          res_col2.metric("อัตราดอกเบี้ย (Interest Rate Applied)", f"{interest_rate:.2f}%", help=f"Based on the nearest qualifying tier: {int(matched_percent)}%")
                          rounded_monthly = math.ceil(monthly_installment)
                          res_col3.metric("ยอดผ่อนรายเดือน (Monthly Installment)", f"฿{rounded_monthly:,.0f} /เดือน")
-
 
                      except (ValueError, TypeError, ZeroDivisionError) as e:
                          st.error(f"⚠️ Error calculating installment for {period} months: {e}")
