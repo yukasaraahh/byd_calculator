@@ -136,7 +136,7 @@ col_img, col_inputs = st.columns([4, 2])
 # --------- Input Column ---------
 
 with col_inputs:
-    st.markdown("### เลือกรถที่คุณสนใจ (Select Car & Options)")
+    st.markdown("###🚗 เลือกรถที่คุณสนใจ (Select Car & Options)")
     
     model_options = sorted(car_df["model"].unique())
     if 'selected_model' not in st.session_state or st.session_state.selected_model not in model_options:
@@ -179,7 +179,9 @@ with col_inputs:
 
     st.caption(f"💸 เงินดาวน์ที่เลือก : ฿{down_payment_amount:,.0f} ({int(down_percent)}%)")
     period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน) (Select your monthly payment plan)", [48, 60, 72, 84], key="period_months")
-    submitted = st.button("🧮 คำนวณค่างวดของคุณ (Calculate Your Payment)")
+    col_center = st.columns([1, 2, 1])[1]
+    with col_center:
+        submitted = st.button("🧮 คำนวณค่างวดของคุณ (Calculate Your Payment)")
 
     if submitted:
         st.session_state.show_result = True
