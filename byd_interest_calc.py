@@ -155,7 +155,7 @@ with col_inputs:
     image_url_for_display = convert_drive_link_to_direct_image_url(car_row["image_url"].values[0]) if not car_row.empty else None
 
     st.metric(label="💰 ราคาจำหน่าย (Car Price)", value=f"฿{price:,.2f}")
-    st.markdown("##### 💵 คำนวณค่างวด <small>(Estimate Your Monthly Payment)</small>', unsafe_allow_html=True)
+    st.markdown("##### 💵 คำนวณค่างวด <small>(Estimate Your Monthly Payment)</small>", unsafe_allow_html=True)
 
     input_type = st.radio("เลือกรูปแบบการวางเงินดาวน์ (Select Down Payment Method)", ["จำนวนเงิน (Amount - THB)", "เปอร์เซ็นต์ (%) (Percentage)"], key="dp_type", horizontal=True)
 
