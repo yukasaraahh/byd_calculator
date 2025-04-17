@@ -138,7 +138,7 @@ col_img, col_inputs = st.columns([4, 2])
 # --------- Input Column ---------
 
 with col_inputs:
-    st.markdown("#### 🚗 เลือกรถที่คุณสนใจ (Select Car & Options)")
+    st.markdown("#### รุ่นรถ (Car Model)")
     
     model_options = sorted(car_df["model"].unique())
     if 'selected_model' not in st.session_state or st.session_state.selected_model not in model_options:
