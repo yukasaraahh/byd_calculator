@@ -240,19 +240,19 @@ with col_inputs:
         </style>
         """, unsafe_allow_html=True)
     
-        if st.markdown("""
-            <div style="text-align:center;">
-                <form action="" method="post">
-                    <button type="submit" name="calculate" class="custom-button">
-                        🧮 คำนวณค่างวดของคุณ <br><small>(Calculate Your Payment)</small>
-                    </button>
-                </form>
-            </div>
-        """, unsafe_allow_html=True):
-            pass  # This is for layout rendering
+        # HTML-style button inside form
+        st.markdown("""
+        <form method="get">
+            <button type="submit" name="calculate" value="1" class="custom-button">
+                🧮 คำนวณค่างวดของคุณ <br><small>(Calculate Your Payment)</small>
+            </button>
+        </form>
+        """, unsafe_allow_html=True)
     
-        if st.experimental_get_query_params().get("calculate") is not None:
-            st.session_state.show_result = True
+    # Use st.query_params correctly (no deprecated function)
+    params = st.query_params
+    if "calculate" in params and params["calculate"] == "1":
+        st.session_state.show_result = True
 
     
 with col_img:
