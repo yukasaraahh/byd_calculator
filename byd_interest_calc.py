@@ -16,8 +16,7 @@ st.markdown("""
     .custom-button-wrapper {
         display: flex;
         justify-content: center;
-        margin-top: 1.5rem;
-        margin-bottom: 2rem;
+
     }
     .stButton > button.custom-button {
         background-color: #e63946;
