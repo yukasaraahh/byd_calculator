@@ -138,7 +138,7 @@ col_img, col_inputs = st.columns([4, 2])
 # --------- Input Column ---------
 
 with col_inputs:
-    st.markdown("##### รุ่นรถ (Car Model)")
+    st.markdown('##### รุ่นรถ <small>(Car Model)</small>', unsafe_allow_html=True)
     
     model_options = sorted(car_df["model"].unique())
     if 'selected_model' not in st.session_state or st.session_state.selected_model not in model_options:
@@ -155,7 +155,7 @@ with col_inputs:
     image_url_for_display = convert_drive_link_to_direct_image_url(car_row["image_url"].values[0]) if not car_row.empty else None
 
     st.metric(label="💰 ราคาจำหน่าย (Car Price)", value=f"฿{price:,.2f}")
-    st.markdown("#### 💵 คำนวณค่างวด (Estimate Your Monthly Payment)")
+    st.markdown("##### 💵 คำนวณค่างวด (Estimate Your Monthly Payment)")
 
     input_type = st.radio("เลือกรูปแบบการวางเงินดาวน์ (Select Down Payment Method)", ["จำนวนเงิน (Amount - THB)", "เปอร์เซ็นต์ (%) (Percentage)"], key="dp_type", horizontal=True)
 
