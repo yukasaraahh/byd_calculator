@@ -285,13 +285,11 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
                     </div>
                     """, unsafe_allow_html=True)
              else:
-                 st.markdown("""
-                <div style="background-color:#fff3cd; padding: 16px; border-left: 6px solid #ffeeba; border-radius: 4px;">
-                😕 <strong>ไม่มีแผนผ่อนชำระที่เข้าเงื่อนไข</strong> เนื่องจากดอกเบี้ยที่คำนวณไม่ถึงเกณฑ์ขั้นต่ำที่กำหนด  
+                st.markdown("""
+                😕 ไม่มีแผนผ่อนชำระที่เข้าเงื่อนไข เนื่องจากดอกเบี้ยที่คำนวณไม่ถึงเกณฑ์ขั้นต่ำที่กำหนด  
                 โปรดลองลดจำนวนเงินดาวน์ลง เพื่อดูตัวเลือกแผนผ่อนชำระอื่น ๆ  
                 <br><small>(There are no qualifying installment plans because the calculated interest does not meet the minimum required threshold.  
                 Please try lowering your down payment to view other available financing options.)</small>
-                </div>
                 """, unsafe_allow_html=True)
 
              # Since the 30% branch applies, skip showing the regular financing result.
