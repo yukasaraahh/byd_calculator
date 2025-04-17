@@ -211,7 +211,6 @@ with col_inputs:
 
     st.caption(f"💸 เงินดาวน์ที่เลือก : ฿{down_payment_amount:,.0f} ({int(down_percent)}%)")
     period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน) (Select your monthly payment plan)", [48, 60, 72, 84], key="period_months")
-    col_center = st.columns([1, 2, 1])[1]
     with col_center:
         st.markdown("""
         <style>
@@ -242,19 +241,20 @@ with col_inputs:
             transform: scale(1.02);
         }
         </style>
-        <div class="custom-button-wrapper">
-            <form action="" method="POST">
-                <button type="submit" name="submit_button">🧮 คำนวณค่างวดของคุณ<br><small>(Calculate Your Payment)</small></button>
-            </form>
-        </div>
         """, unsafe_allow_html=True)
     
-    # Detect button click
-    if "submit_button" in st.query_params:
-        submitted = True
-    else:
-        submitted = False
-
+        # Initialize state once
+        if "submitted" not in st.session_state:
+            st.session_state.submitted = False
+    
+        # Display centered button
+        st.markdown('<div class="custom-button-wrapper">', unsafe_allow_html=True)
+        if st.button("🧮 คำนวณค่างวดของคุณ\n(Calculate Your Payment)", key="custom_calc_btn"):
+            st.session_state.submitted = True
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Now check if submitted
+    submitted = st.session_state.submitted
 
 with col_img:
     st.markdown("#### รถที่คุณเลือก (Your Selected Model)")
