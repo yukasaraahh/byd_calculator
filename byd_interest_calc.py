@@ -130,7 +130,7 @@ def render_image():
 
 
 # --------- App layout ---------
-st.markdown("### 📊 เริ่มต้นคำนวณค่างวดของคุณ", unsafe_allow_html=True)
+
 
 # --------- Define main layout columns ---------
 col_img, col_inputs = st.columns([4, 2])
