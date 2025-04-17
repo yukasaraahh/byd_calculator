@@ -213,12 +213,48 @@ with col_inputs:
     period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน) (Select your monthly payment plan)", [48, 60, 72, 84], key="period_months")
     col_center = st.columns([1, 2, 1])[1]
     with col_center:
-        st.markdown('<div class="custom-button-container">', unsafe_allow_html=True)
-        submitted = st.button("🧮 คำนวณค่างวดของคุณ\n(Calculate Your Payment)", key="custom_button")
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("""
+        <style>
+        .custom-button-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .custom-button-wrapper button {
+            background-color: #e63946;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 320px;
+            line-height: 1.3;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            font-family: 'Noto Sans Thai', sans-serif;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+        }
+        .custom-button-wrapper button:hover {
+            background-color: #d62839;
+            transform: scale(1.02);
+        }
+        </style>
+        <div class="custom-button-wrapper">
+            <form action="" method="POST">
+                <button type="submit" name="submit_button">🧮 คำนวณค่างวดของคุณ<br><small>(Calculate Your Payment)</small></button>
+            </form>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Detect button click
+    if "submit_button" in st.experimental_get_query_params():
+        submitted = True
+    else:
+        submitted = False
 
-    if submitted:
-        st.session_state.show_result = True
 
 with col_img:
     st.markdown("#### รถที่คุณเลือก (Your Selected Model)")
