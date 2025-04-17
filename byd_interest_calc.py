@@ -213,40 +213,46 @@ with col_inputs:
     period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน) (Select your monthly payment plan)", [48, 60, 72, 84], key="period_months")
     col_center = st.columns([1, 2, 1])[1]
     with col_center:
-        st.markdown("""
-        <style>
-        .custom-button {
-            background-color: #e63946;
-            color: white;
-            font-weight: bold;
-            border: none;
-            padding: 12px 20px;
-            font-size: 18px;
-            border-radius: 12px;
-            cursor: pointer;
-            width: 100%;
-            max-width: none !important;
-            text-align: center;
-            transition: all 0.2s ease;
-            font-family: 'Noto Sans Thai', sans-serif;
-            line-height: 1.4;
-            display: block;
-        }
-        .custom-button:hover {
-            background-color: #d62839;
-            transform: scale(1.02);
-        }
-        </style>
-        """, unsafe_allow_html=True)
-    
-        # HTML-style button inside form
-        st.markdown("""
-        <form method="get">
-            <button type="submit" name="calculate" value="1" class="custom-button">
-                🧮 คำนวณค่างวดของคุณ <br><small>(Calculate Your Payment)</small>
-            </button>
-        </form>
-        """, unsafe_allow_html=True)
+    st.markdown("""
+    <style>
+    .custom-button {
+        background-color: #e63946;
+        color: white;
+        font-weight: bold;
+        border: none;
+        padding: 12px 20px;
+        font-size: 18px;
+        border-radius: 12px;
+        cursor: pointer;
+        width: 100%;
+        text-align: center;
+        transition: all 0.2s ease;
+        font-family: 'Noto Sans Thai', sans-serif;
+        line-height: 1.4;
+        display: block;
+    }
+    .custom-button:hover {
+        background-color: #d62839;
+        transform: scale(1.02);
+    }
+
+    /* 🛠️ Make the form match the width of Streamlit inputs */
+    .stMarkdown > div > form {
+        width: 100% !important;
+        max-width: 100% !important;
+        display: block;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <form method="get">
+        <button type="submit" name="calculate" value="1" class="custom-button">
+            🧮 คำนวณค่างวดของคุณ <br><small>(Calculate Your Payment)</small>
+        </button>
+    </form>
+    """, unsafe_allow_html=True)
+
     
     # Use st.query_params correctly (no deprecated function)
     params = st.query_params
