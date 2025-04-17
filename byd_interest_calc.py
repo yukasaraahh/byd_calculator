@@ -213,6 +213,32 @@ with col_inputs:
     period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน) (Select your monthly payment plan)", [48, 60, 72, 84], key="period_months")
     col_center = st.columns([1, 2, 1])[1]
     with col_center:
+        st.markdown("""
+        <style>
+        .stForm button {
+            background-color: #e63946 !important;
+            color: white !important;
+            font-weight: bold;
+            border: none;
+            padding: 16px 30px;
+            font-size: 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            transition: all 0.2s ease;
+            font-family: 'Noto Sans Thai', sans-serif;
+            line-height: 1.4;
+            display: block;
+            margin: 1.5rem auto;
+        }
+        .stForm button:hover {
+            background-color: #d62839 !important;
+            transform: scale(1.02);
+        }
+        </style>
+        """, unsafe_allow_html=True)
         with st.form("calc_form", clear_on_submit=False):
             submitted = st.form_submit_button(
                 label="🧮 คำนวณค่างวดของคุณ\n(Calculate Your Payment)",
