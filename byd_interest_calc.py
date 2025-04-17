@@ -220,17 +220,16 @@ with col_inputs:
             color: white;
             font-weight: bold;
             border: none;
-            padding: 16px 30px;
+            padding: 12px 20px;
             font-size: 18px;
             border-radius: 12px;
             cursor: pointer;
             width: 100%;
-            max-width: 380px;
+            max-width: none !important;
             text-align: center;
             transition: all 0.2s ease;
             font-family: 'Noto Sans Thai', sans-serif;
             line-height: 1.4;
-            margin: 1.5rem auto;
             display: block;
         }
         .custom-button:hover {
