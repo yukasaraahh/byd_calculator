@@ -236,9 +236,9 @@ with col_inputs:
         """, unsafe_allow_html=True)
 
     if "submit_button" in st.session_state or st.experimental_get_query_params().get("submit_button"):
-    submitted = True
+        submitted = True
     else:
-    submitted = False
+        submitted = False
 
 with col_img:
     st.markdown("#### รถที่คุณเลือก (Your Selected Model)")
