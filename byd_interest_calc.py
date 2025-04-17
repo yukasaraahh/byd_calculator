@@ -199,7 +199,6 @@ with col_inputs:
         font-family: 'Noto Sans Thai', sans-serif;
         line-height: 1.4;
         display: block;
-        margin-top: 1.5rem;
     }
     .custom-button:hover {
         background-color: #d62839;
