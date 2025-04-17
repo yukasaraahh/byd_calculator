@@ -138,7 +138,7 @@ col_img, col_inputs = st.columns([4, 2])
 # --------- Input Column ---------
 
 with col_inputs:
-    st.markdown("### 🚗 เลือกรถที่คุณสนใจ (Select Car & Options)")
+    st.markdown("#### 🚗 เลือกรถที่คุณสนใจ (Select Car & Options)")
     
     model_options = sorted(car_df["model"].unique())
     if 'selected_model' not in st.session_state or st.session_state.selected_model not in model_options:
@@ -187,7 +187,7 @@ with col_inputs:
         st.session_state.show_result = True
       
 with col_img:
-    st.markdown("#### รถที่คุณเลือก (Your Selected Model)")
+    st.markdown("#### 🚗 เลือกรถที่คุณสนใจ (Select Car & Options)")
     if pd.notna(image_url_for_display) and isinstance(image_url_for_display, str) and image_url_for_display.startswith("http"):
         st.image(image_url_for_display, caption=f"{selected_model} - {selected_submodel}", use_container_width=True)
     elif price > 0:
