@@ -289,7 +289,7 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
                 <div style="background-color:#fff3cd; padding: 16px; border-left: 6px solid #ffeeba; border-radius: 4px;">
                 😕 <strong>ไม่มีแผนผ่อนชำระที่เข้าเงื่อนไข</strong> เนื่องจากดอกเบี้ยที่คำนวณไม่ถึงเกณฑ์ขั้นต่ำที่กำหนด  
                 โปรดลองลดจำนวนเงินดาวน์ลง เพื่อดูตัวเลือกแผนผ่อนชำระอื่น ๆ  
-                <br><small>(There are no qualifying installment plans because the calculated interest does not meet the minimum required threshold.  
+                <br><br><small>(There are no qualifying installment plans because the calculated interest does not meet the minimum required threshold.  
                 Please try lowering your down payment to view other available financing options.)</small>
                 </div>
                 """, unsafe_allow_html=True)
@@ -327,7 +327,12 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
          else:
              st.error("❌ No financing options available for the provided down payment percentage.")
 elif not input_valid:
-    st.info("❌ โปรดใส่เงินดาวน์ขั้นต่ำที่ 5% ของราคารถ (Please enter a down payment of at least 5% of the car price)")
+    st.markdown("""
+    <div style="background-color:#f8d7da; padding: 16px; border-left: 6px solid #f5c6cb; border-radius: 4px;">
+    ❌ <strong>โปรดใส่เงินดาวน์ขั้นต่ำที่ 5% ของราคารถ</strong><br><br>
+    <small>(Please enter a down payment of at least 5% of the car price)</small>
+    </div>
+    """, unsafe_allow_html=True)
 elif price <= 0:
     st.info("ℹ️ Please select a valid car with a price > 0.")
 elif down_payment_df.empty:
