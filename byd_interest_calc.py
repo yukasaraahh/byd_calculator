@@ -181,47 +181,9 @@ with col_inputs:
 
     st.caption(f"💸 เงินดาวน์ที่เลือก : ฿{down_payment_amount:,.0f} ({int(down_percent)}%)")
     period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน) (Select your monthly payment plan)", [48, 60, 72, 84], key="period_months")
-    # Custom styling + full-width form button
-    st.markdown("""
-    <style>
-    .custom-button {
-        background-color: #e63946;
-        color: white;
-        font-weight: bold;
-        border: none;
-        padding: 12px 20px;
-        font-size: 18px;
-        border-radius: 12px;
-        cursor: pointer;
-        width: 100%;
-        text-align: center;
-        transition: all 0.2s ease;
-        font-family: 'Noto Sans Thai', sans-serif;
-        line-height: 1.4;
-        display: block;
-    }
-    .custom-button:hover {
-        background-color: #d62839;
-        transform: scale(1.02);
-    }
-    .stMarkdown > div > form {
-        width: 100% !important;
-        max-width: 100% !important;
-        display: block;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-    
-    st.markdown("""
-    <form method="get">
-        <button type="submit" name="calculate" value="1" class="custom-button">
-            🧮 คำนวณค่างวดของคุณ <br><small>(Calculate Your Payment)</small>
-        </button>
-    </form>
-    """, unsafe_allow_html=True)
-    # Use st.query_params correctly (no deprecated function)
-    params = st.query_params
-    if "calculate" in params and params["calculate"] == "1":
+    submitted = st.button("🧮 คำนวณค่างวดของคุณ (Calculate Your Payment)")
+
+    if submitted:
         st.session_state.show_result = True
       
 with col_img:
