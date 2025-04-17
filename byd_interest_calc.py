@@ -9,45 +9,44 @@ st.markdown("""
         font-family: 'Noto Sans Thai', sans-serif !important;
     }
 
-    html, body, div, span, input, select, button, label, textarea,
+  html, body, div, span, input, select, button, label, textarea,
     .css-1d391kg, .css-ffhzg2, .css-1cpxqw2, .css-1offfwp, .stButton button {
         font-family: 'Noto Sans Thai', sans-serif !important;
+    }
+    .custom-button-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    .stButton > button.custom-button {
+        background-color: #0066cc;
+        color: white;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        transition: background-color 0.3s ease, transform 0.1s ease;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        white-space: pre-line;
+        max-width: 400px;
+        width: 100%;
+    }
+    .stButton > button.custom-button:hover {
+        background-color: #004c99;
+        transform: scale(1.02);
+    }
+    @media only screen and (max-width: 768px) {
+        .stButton > button.custom-button {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 15px;
+        }
     }
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown("""
-<style>
-.custom-button-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 1.5rem;
-    margin-bottom: 2rem;
-}
-.stButton > button.custom-button {
-    background-color: #0066cc;
-    color: white;
-    border: none;
-    padding: 0.75rem 2rem;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    transition: background-color 0.3s ease, transform 0.1s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-.stButton > button.custom-button:hover {
-    background-color: #004c99;
-    transform: scale(1.02);
-}
-@media only screen and (max-width: 768px) {
-    .stButton > button.custom-button {
-        width: 100%;
-        padding: 0.75rem 1rem;
-        font-size: 15px;
-    }
-}
-</style>
-""", unsafe_allow_html=True)
 
 import pandas as pd
 import io
@@ -214,31 +213,12 @@ with col_inputs:
     period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน) (Select your monthly payment plan)", [48, 60, 72, 84], key="period_months")
     col_center = st.columns([1, 2, 1])[1]
     with col_center:
-        clicked = st.markdown("""
-        <div style="text-align:center; margin-top: 12px;">
-            <form action="" method="post">
-                <button type="submit" name="submit_button" style="
-                    font-family: 'Noto Sans Thai', sans-serif;
-                    font-size: 16px;
-                    background-color: #ffffff;
-                    border: 1.5px solid #d0d0d0;
-                    border-radius: 12px;
-                    padding: 14px 26px;
-                    cursor: pointer;
-                    width: 100%;
-                    max-width: 360px;
-                    transition: all 0.3s ease;
-                " onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='#ffffff'">
-                    🧮 คำนวณค่างวดของคุณ <br><small>(Calculate Your Payment)</small>
-                </button>
-            </form>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown('<div class="custom-button-container">', unsafe_allow_html=True)
+        submitted = st.button("🧮 คำนวณค่างวดของคุณ\n(Calculate Your Payment)", key="custom_button")
+        st.markdown('</div>', unsafe_allow_html=True)
 
-    if "submit_button" in st.session_state or st.experimental_get_query_params().get("submit_button"):
-        submitted = True
-    else:
-        submitted = False
+    if submitted:
+        st.session_state.show_result = True
 
 with col_img:
     st.markdown("#### รถที่คุณเลือก (Your Selected Model)")
