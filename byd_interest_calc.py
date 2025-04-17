@@ -16,29 +16,35 @@ st.markdown("""
     .custom-button-wrapper {
         display: flex;
         justify-content: center;
-        margin-top: 1rem;
-        margin-bottom: 1.5rem;
+        margin-top: 1.5rem;
+        margin-bottom: 2rem;
     }
-    .custom-button-wrapper button {
+    .stButton > button.custom-button {
         background-color: #e63946;
         color: white;
         border: none;
-        padding: 14px 24px;
+        padding: 12px 20px;
+        border-radius: 10px;
         font-size: 16px;
         font-weight: bold;
-        border-radius: 10px;
         cursor: pointer;
         width: 100%;
-        max-width: 360px;
-        line-height: 1.4;
+        max-width: 320px;
+        line-height: 1.3;
         transition: background-color 0.3s ease, transform 0.1s ease;
         font-family: 'Noto Sans Thai', sans-serif;
         box-shadow: 0 2px 5px rgba(0,0,0,0.08);
         white-space: pre-line;
     }
-    .custom-button-wrapper button:hover {
-        background-color: #c9303e;
+    .stButton > button.custom-button:hover {
+        background-color: #d62839;
         transform: scale(1.02);
+    }
+    @media only screen and (max-width: 768px) {
+        .stButton > button.custom-button {
+            font-size: 15px;
+            padding: 12px 16px;
+        }
     }
     </style>
 """, unsafe_allow_html=True)
@@ -244,9 +250,11 @@ with col_inputs:
     
         # Display centered button
         st.markdown('<div class="custom-button-wrapper">', unsafe_allow_html=True)
-        if st.button("🧮 คำนวณค่างวดของคุณ\n(Calculate Your Payment)", key="custom_calc_btn"):
-            st.session_state.submitted = True
+        submitted = st.button("🧮 คำนวณค่างวดของคุณ\n(Calculate Your Payment)", key="custom_calc_btn", type="primary")
         st.markdown('</div>', unsafe_allow_html=True)
+        
+        if submitted:
+            st.session_state.show_result = True
     
     # Now check if submitted
     submitted = st.session_state.submitted
