@@ -225,7 +225,7 @@ with col_inputs:
             border-radius: 12px;
             cursor: pointer;
             width: 100%;
-            max-width: 380px;
+            max-width: 100%;
             text-align: center;
             transition: all 0.2s ease;
             font-family: 'Noto Sans Thai', sans-serif;
@@ -238,12 +238,13 @@ with col_inputs:
             transform: scale(1.02);
         }
         section[data-testid="stForm"] {
-            width: 100% !important;
-            max-width: 100% !important;
-            padding: 0 !important;
+            background-color: transparent !important;
             box-shadow: none !important;
             border: none !important;
-            margin: 0 auto;
+            padding: 0 !important;
+            margin: 0 auto !important;
+            width: 100% !important;
+            max-width: 100% !important;
         }
         </style>
         """, unsafe_allow_html=True)
