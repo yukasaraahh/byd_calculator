@@ -16,6 +16,39 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+st.markdown("""
+<style>
+.custom-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+}
+.stButton > button.custom-button {
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.stButton > button.custom-button:hover {
+    background-color: #004c99;
+    transform: scale(1.02);
+}
+@media only screen and (max-width: 768px) {
+    .stButton > button.custom-button {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 15px;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
 import pandas as pd
 import io
 import re
@@ -181,7 +214,10 @@ with col_inputs:
     period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน) (Select your monthly payment plan)", [48, 60, 72, 84], key="period_months")
     col_center = st.columns([1, 2, 1])[1]
     with col_center:
-        submitted = st.button("🧮 คำนวณค่างวดของคุณ (Calculate Your Payment)")
+        with st.container():
+            st.markdown('<div class="custom-button-container">', unsafe_allow_html=True)
+            submitted = st.button("🧮 คำนวณค่างวดของคุณ (Calculate Your Payment)", key="custom_button")
+            st.markdown('</div>', unsafe_allow_html=True)
 
     if submitted:
         st.session_state.show_result = True
