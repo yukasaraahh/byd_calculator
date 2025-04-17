@@ -215,39 +215,43 @@ with col_inputs:
     with col_center:
         st.markdown("""
         <style>
-        .custom-button-wrapper {
-            display: flex;
-            justify-content: center;
-
-        }
-        .stButton > button.custom-button {
+        .custom-button {
             background-color: #e63946;
             color: white;
+            font-weight: bold;
             border: none;
             padding: 16px 30px;
-            border-radius: 12px;
             font-size: 18px;
-            font-weight: bold;
+            border-radius: 12px;
             cursor: pointer;
             width: 100%;
             max-width: 380px;
-            line-height: 1.4;
-            transition: background-color 0.3s ease, transform 0.1s ease;
+            text-align: center;
+            transition: all 0.2s ease;
             font-family: 'Noto Sans Thai', sans-serif;
-            white-space: pre-line;
+            line-height: 1.4;
+            margin: 1.5rem auto;
+            display: block;
         }
-        .stButton > button.custom-button:hover {
+        .custom-button:hover {
             background-color: #d62839;
             transform: scale(1.02);
         }
         </style>
-        <div class="custom-button-wrapper">
         """, unsafe_allow_html=True)
     
-        submitted = st.button("🧮 คำนวณค่างวดของคุณ\n(Calculate Your Payment)", key="custom_calc_btn", type="primary")
-        st.markdown("</div>", unsafe_allow_html=True)
+        if st.markdown("""
+            <div style="text-align:center;">
+                <form action="" method="post">
+                    <button type="submit" name="calculate" class="custom-button">
+                        🧮 คำนวณค่างวดของคุณ <br><small>(Calculate Your Payment)</small>
+                    </button>
+                </form>
+            </div>
+        """, unsafe_allow_html=True):
+            pass  # This is for layout rendering
     
-        if submitted:
+        if st.experimental_get_query_params().get("calculate") is not None:
             st.session_state.show_result = True
 
     
