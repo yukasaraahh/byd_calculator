@@ -136,7 +136,7 @@ def render_image():
 col_img, col_inputs = st.columns([4, 2])
 
 # --------- Input Column ---------
-
+st.markdown("##")
 with col_inputs:
     st.markdown('##### รุ่นรถ <small>(Car Model)</small>', unsafe_allow_html=True)
     
