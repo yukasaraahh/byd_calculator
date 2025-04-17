@@ -211,7 +211,7 @@ with col_inputs:
 
     st.caption(f"💸 เงินดาวน์ที่เลือก : ฿{down_payment_amount:,.0f} ({int(down_percent)}%)")
     period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน) (Select your monthly payment plan)", [48, 60, 72, 84], key="period_months")
-center_button_col = st.columns([1, 2, 1])[1]
+    center_button_col = st.columns([1, 2, 1])[1]
     with center_button_col:
         with st.form("submit_form"):
             st.markdown("""
