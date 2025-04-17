@@ -214,51 +214,13 @@ with col_inputs:
     col_center = st.columns([1, 2, 1])[1]
     with col_center:
         with st.form("calc_form", clear_on_submit=False):
-            st.markdown("""
-            <style>
-            .btn-calc {
-                background-color: #e63946;
-                color: white;
-                font-weight: bold;
-                border: none;
-                padding: 16px 30px;
-                font-size: 18px;
-                border-radius: 12px;
-                cursor: pointer;
-                width: 100%;
-                max-width: 380px;
-                text-align: center;
-                transition: all 0.2s ease;
-                font-family: 'Noto Sans Thai', sans-serif;
-                line-height: 1.4;
-            }
-            .btn-calc:hover {
-                background-color: #d62839;
-                transform: scale(1.02);
-            }
-            .btn-container {
-                display: flex;
-                justify-content: center;
-                margin: 1.5rem 0;
-            }
-            /* Hide the form box */
-            section[data-testid="stForm"] {
-                box-shadow: none;
-                border: none;
-                padding: 0;
-            }
-            </style>
-            <div class="btn-container">
-                <button type="submit" class="btn-calc">🧮 คำนวณค่างวดของคุณ<br><small>(Calculate Your Payment)</small></button>
-            </div>
-            """, unsafe_allow_html=True)
+            submitted = st.form_submit_button(
+                label="🧮 คำนวณค่างวดของคุณ\n(Calculate Your Payment)",
+                use_container_width=True
+            )
     
-            submitted = st.form_submit_button()
-    
-    # Only update session state if user just submitted
-    if submitted:
-        st.session_state.show_result = True
-
+        if submitted:
+            st.session_state.show_result = True
     
 with col_img:
     st.markdown("#### รถที่คุณเลือก (Your Selected Model)")
