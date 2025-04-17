@@ -329,7 +329,7 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
 elif not input_valid:
     st.markdown("""
     <div style="background-color:#f8d7da; padding: 16px; border-left: 6px solid #f5c6cb; border-radius: 4px;">
-    ❌ <strong>โปรดใส่เงินดาวน์ขั้นต่ำที่ 5% ของราคารถ</strong><br><br>
+    ❌ <strong>โปรดใส่เงินดาวน์ขั้นต่ำที่ 5% ของราคารถ</strong><br>
     <small>(Please enter a down payment of at least 5% of the car price)</small>
     </div>
     """, unsafe_allow_html=True)
