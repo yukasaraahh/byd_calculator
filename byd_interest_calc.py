@@ -237,7 +237,7 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
                 st.markdown(f"""
                 <div style="background-color: #e6f4ea; padding: 1rem; border-radius: 10px; border-left: 6px solid #34a853;">
                 ✅ <strong>ด้วยเงินดาวน์ {down_payment_amount:,.0f} บาท ({down_percent:.2f}%)</strong> 
-                แผนที่คุณเลือกไม่เข้าเงื่อนไขการจัดไฟแนนซ์ในอัตราดอกเบี้ย แต่ยังมีแผนผ่อนชำระระยะยาวอื่น ๆ ที่คุณสามารถเลือกได้ตามรายละเอียดด้านล่าง<br>
+                แผนที่คุณเลือกไม่เข้าเงื่อนไขการจัดไฟแนนซ์ แต่ยังมีแผนผ่อนชำระระยะยาวอื่น ๆ ที่คุณสามารถเลือกได้ตามรายละเอียดด้านล่าง<br>
                 <small><em>(The selected plan is not eligible for special financing rates, but alternative longer-term plans are available below.)</em></small>
                 </div>
                 """, unsafe_allow_html=True)
@@ -285,7 +285,8 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
                     </div>
                     """, unsafe_allow_html=True)
              else:
-                 st.warning("😕 ไม่มีงวดผ่อนที่เข้าเงื่อนไขในแผนดาวน์ 30% เนื่องจากดอกเบี้ยที่คำนวณไม่ถึงเกณฑ์ขั้นต่ำที่กำหนด โปรดลองใส่เงินดาวน์ที่ต่ำลงเพื่อดูแผนผ่อนชำระอื่น (No periods qualify for the 30% plan because the calculated interest does not exceed the minimum threshold for any period. Please try entering a lower down payment to view other installment options.)")
+                 st.warning("😕 ไม่มีแผนผ่อนชำระที่เข้าเงื่อนไข เนื่องจากดอกเบี้ยที่คำนวณไม่ถึงเกณฑ์ขั้นต่ำที่กำหนด โปรดลองลดจำนวนเงินดาวน์ลง เพื่อดูตัวเลือกแผนผ่อนชำระอื่น ๆ <br><small>(There are no qualifying installment plans because the calculated interest does not meet the minimum required threshold.
+Please try lowering your down payment to view other available financing options.)</small>")
              
              # Since the 30% branch applies, skip showing the regular financing result.
              st.stop()
