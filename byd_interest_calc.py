@@ -18,6 +18,15 @@ x
     </style>
 """, unsafe_allow_html=True)
 
+# ✅ Smooth scrolling CSS
+st.markdown("""
+    <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
 import pandas as pd
 import io
 import re
@@ -199,7 +208,6 @@ with col_inputs:
         font-family: 'Noto Sans Thai', sans-serif;
         line-height: 1.4;
         display: block;
-        margin-top: 1.5rem;
     }
     .custom-button:hover {
         background-color: #d62839;
@@ -214,7 +222,7 @@ with col_inputs:
     """, unsafe_allow_html=True)
     
     st.markdown("""
-    <form method="get">
+    <form method="get" action="#result">
         <button type="submit" name="calculate" value="1" class="custom-button">
             🧮 คำนวณค่างวดของคุณ <br><small>(Calculate Your Payment)</small>
         </button>
@@ -235,7 +243,7 @@ with col_img:
 
 # --------- Calculations & Results ---------
 period_options = [48, 60, 72, 84]
-st.markdown("---")
+st.markdown('<div id="result"></div>', unsafe_allow_html=True)
 
 if st.session_state.show_result and input_valid and price > 0 and not down_payment_df.empty:
 
