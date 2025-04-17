@@ -181,52 +181,50 @@ with col_inputs:
 
     st.caption(f"💸 เงินดาวน์ที่เลือก : ฿{down_payment_amount:,.0f} ({int(down_percent)}%)")
     period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน) (Select your monthly payment plan)", [48, 60, 72, 84], key="period_months")
-    # Custom styling + full-width form button
-    st.markdown("""
-    <style>
-    .custom-button {
-        background-color: #e63946;
-        color: white;
-        font-weight: bold;
-        border: none;
-        padding: 12px 20px;
-        font-size: 18px;
-        border-radius: 12px;
-        cursor: pointer;
-        width: 100%;
-        text-align: center;
-        transition: all 0.2s ease;
-        font-family: 'Noto Sans Thai', sans-serif;
-        line-height: 1.4;
-        display: block;
-    }
-    .custom-button:hover {
-        background-color: #d62839;
-        transform: scale(1.02);
-    }
-    .stMarkdown > div > form {
-        width: 100% !important;
-        max-width: 100% !important;
-        display: block;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+    with st.form("calc_form", clear_on_submit=False):
+        # Custom styling for the button
+        st.markdown("""
+        <style>
+        div.stButton > button {
+            background-color: #e63946;
+            color: white;
+            font-weight: bold;
+            border: none;
+            padding: 16px 20px;
+            font-size: 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            transition: all 0.2s ease;
+            font-family: 'Noto Sans Thai', sans-serif;
+            line-height: 1.4;
+        }
+        div.stButton > button:hover {
+            background-color: #d62839;
+            transform: scale(1.02);
+        }
+        section[data-testid="stForm"] {
+            box-shadow: none !important;
+            border: none !important;
+            padding: 0 !important;
+            margin: 1rem 0 0 0 !important;
+        }
+        </style>
+        """, unsafe_allow_html=True)
     
-    st.markdown("""
-    <form method="get">
-        <button type="submit" name="calculate" value="1" class="custom-button">
-            🧮 คำนวณค่างวดของคุณ <br><small>(Calculate Your Payment)</small>
-        </button>
-    </form>
-    """, unsafe_allow_html=True)
-
+        submitted = st.form_submit_button("🧮 คำนวณค่างวดของคุณ \n(Calculate Your Payment)")
     
-    # Use st.query_params correctly (no deprecated function)
-    params = st.query_params
-    if "calculate" in params and params["calculate"] == "1":
+    if submitted:
         st.session_state.show_result = True
-
     
+        
+        # Use st.query_params correctly (no deprecated function)
+        params = st.query_params
+        if "calculate" in params and params["calculate"] == "1":
+            st.session_state.show_result = True
+    
+        
 with col_img:
     st.markdown("#### รถที่คุณเลือก (Your Selected Model)")
     if pd.notna(image_url_for_display) and isinstance(image_url_for_display, str) and image_url_for_display.startswith("http"):
