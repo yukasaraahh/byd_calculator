@@ -250,7 +250,7 @@ with col_inputs:
         """, unsafe_allow_html=True)
     
     # Detect button click
-    if "submit_button" in st.experimental_get_query_params():
+    if "submit_button" in st.query_params:
         submitted = True
     else:
         submitted = False
