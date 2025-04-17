@@ -168,7 +168,7 @@ col_img, col_inputs = st.columns([4, 2])
 # --------- Input Column ---------
 
 with col_inputs:
-    st.markdown("###🚗 เลือกรถที่คุณสนใจ (Select Car & Options)")
+    st.markdown("### 🚗 เลือกรถที่คุณสนใจ (Select Car & Options)")
     
     model_options = sorted(car_df["model"].unique())
     if 'selected_model' not in st.session_state or st.session_state.selected_model not in model_options:
@@ -237,8 +237,17 @@ with col_inputs:
             background-color: #d62839 !important;
             transform: scale(1.02);
         }
+        section[data-testid="stForm"] {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+            border: none !important;
+            margin: 0 auto;
+        }
         </style>
         """, unsafe_allow_html=True)
+        
         with st.form("calc_form", clear_on_submit=False):
             submitted = st.form_submit_button(
                 label="🧮 คำนวณค่างวดของคุณ\n(Calculate Your Payment)",
