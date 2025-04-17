@@ -213,18 +213,13 @@ with col_inputs:
         </style>
         """, unsafe_allow_html=True)
     
-        submitted = st.form_submit_button("🧮 คำนวณค่างวดของคุณ \n(Calculate Your Payment)")
+        # Seamless calculate button
+        submitted = st.form_submit_button("🧮 คำนวณค่างวดของคุณ\n(Calculate Your Payment)")
     
+    # ✅ Trigger result display
     if submitted:
-        st.session_state.show_result = True
-    
-        
-        # Use st.query_params correctly (no deprecated function)
-        params = st.query_params
-        if "calculate" in params and params["calculate"] == "1":
-            st.session_state.show_result = True
-    
-        
+        st.session_state.show_result = True    
+      
 with col_img:
     st.markdown("#### รถที่คุณเลือก (Your Selected Model)")
     if pd.notna(image_url_for_display) and isinstance(image_url_for_display, str) and image_url_for_display.startswith("http"):
