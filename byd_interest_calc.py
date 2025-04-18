@@ -318,7 +318,7 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
                          total_interest = loan_amount * (interest_rate / 100) * (period / 12)
                          monthly_installment = (loan_amount + total_interest) / period
 
-                         st.markdown("### 📊 สรุปการผ่อนชำระ (Installment Summary)")
+                         st.markdown("#### 📊 สรุปการผ่อนชำระ <small>(Installment Summary)</small>", unsafe_allow_html=True)
                          res_col1, res_col2, res_col3 = st.columns(3)
                          rounded_down_payment = math.ceil(down_payment_amount)
                          res_col1.metric("เงินดาวน์ที่เลือก (Your Down Payment)", f"฿{rounded_down_payment:,.0f} ({int(down_percent)}%)")
