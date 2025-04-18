@@ -158,7 +158,7 @@ with col_inputs:
     st.markdown("---")
     st.markdown("##### 💵 คำนวณค่างวด <small>(Estimate Your Monthly Payment)</small>", unsafe_allow_html=True)
 
-    input_type = st.radio("เลือกรูปแบบการวางเงินดาวน์ (Select Down Payment Method)", ["จำนวนเงิน (Amount - THB)", "เปอร์เซ็นต์ (%) (Percentage)"], key="dp_type", horizontal=True)
+    input_type = st.radio("💰 เลือกรูปแบบเงินดาวน์ (Down Payment Method)", ["จำนวนเงิน (Amount - THB)", "เปอร์เซ็นต์ (%) (Percentage)"], key="dp_type", horizontal=True)
 
     down_payment_amount = 0.0
     down_percent = 0.0
