@@ -138,11 +138,7 @@ col_img, col_inputs = st.columns([4, 2])
 # --------- Input Column ---------
 st.markdown("##")
 with col_inputs:
-    st.markdown("""
-    <div style="background-color:#1f2937; color:white; padding:10px 20px; border-radius:30px; display:inline-block; font-weight:bold; font-size:18px;">
-    🚗 รุ่นรถ (Car Model)
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown("##### 🚗 รุ่นรถ <small>(Car Model)</small>", unsafe_allow_html=True)
     
     model_options = sorted(car_df["model"].unique())
     if 'selected_model' not in st.session_state or st.session_state.selected_model not in model_options:
