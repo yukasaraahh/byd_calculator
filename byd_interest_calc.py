@@ -1,18 +1,13 @@
 import streamlit as st
 st.set_page_config(page_title="คำนวณค่างวดรถ BYD | BYD ชลบุรี ออโตโมทีฟ", page_icon="🚗", layout="wide")
 
-st.markdown("""
-    <style>
-    html, body, [data-testid="stAppViewContainer"], .main, .block-container {
-        overflow: visible !important;
-        height: auto !important;
-    }
-
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-    </style>
-""", unsafe_allow_html=True)
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 
 st.markdown("""
     <style>
