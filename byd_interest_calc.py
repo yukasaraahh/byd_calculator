@@ -373,6 +373,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+st.markdown("""
+    <style>
     .custom-footer {
         position: fixed;
         bottom: 0;
