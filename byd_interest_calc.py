@@ -363,3 +363,28 @@ elif down_payment_df.empty:
 
 # PDF Section remains commented out
 # ... (rest of the PDF code if needed) ...
+
+st.markdown("""
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+
+    .custom-footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: #f8f8f8;
+        text-align: center;
+        padding: 10px;
+        font-size: 13px;
+        color: #666;
+        border-top: 1px solid #eaeaea;
+        font-family: 'Noto Sans Thai', sans-serif;
+    }
+    </style>
+
+    <div class="custom-footer">
+        © 2025 BYD ชลบุรี ออโตโมทีฟ | All rights reserved
+    </div>
+""", unsafe_allow_html=True)
