@@ -182,8 +182,8 @@ with col_inputs:
         down_payment_amount = (down_percent / 100) * price
         input_valid = True
 
-    if input_type == "เปอร์เซ็นต์ (%) (Percentage)":
-    st.caption(f"💸 เงินดาวน์ : ฿{down_payment_amount:,.0f} ({int(down_percent)}%)")
+        if input_type == "เปอร์เซ็นต์ (%) (Percentage)":
+        st.caption(f"💸 เงินดาวน์ : ฿{down_payment_amount:,.0f} ({int(down_percent)}%)")
 
     period = st.selectbox("เลือกระยะเวลาการผ่อน (Select your monthly payment plan)", [48, 60, 72, 84], key="period_months")
     submitted = st.button("🧮 คำนวณค่างวด (Calculate Your Payment)")
