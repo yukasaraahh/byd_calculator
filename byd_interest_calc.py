@@ -6,6 +6,9 @@ st.markdown("""
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
+    .css-164nlkn {display: none;} /* Some Streamlit versions use this for footer */
+    .css-h5rgaw {display: none;} /* Sometimes used for the 'Built with Streamlit' */
+    .css-cio0dv {display: none;} /* Mobile version or fallback footer */
     </style>
 """, unsafe_allow_html=True)
 
