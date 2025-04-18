@@ -2,37 +2,37 @@ import streamlit as st
 st.set_page_config(page_title="คำนวณค่างวดรถ BYD | BYD ชลบุรี ออโตโมทีฟ", page_icon="🚗", layout="wide")
 
 hide_streamlit_style = """
-                <style>
-                div[data-testid="stToolbar"] {
-                visibility: hidden;
-                height: 0%;
-                position: fixed;
-                }
-                div[data-testid="stDecoration"] {
-                visibility: hidden;
-                height: 0%;
-                position: fixed;
-                }
-                div[data-testid="stStatusWidget"] {
-                visibility: hidden;
-                height: 0%;
-                position: fixed;
-                }
-                #MainMenu {
-                visibility: hidden;
-                height: 0%;
-                }
-                header {
-                visibility: hidden;
-                height: 0%;
-                }
-                footer {
-                visibility: hidden;
-                height: 0%;
-                }
-                </style>
-                """
+    <style>
+    /* Hide Streamlit's default toolbar, status widget, and footer */
+    div[data-testid="stToolbar"] {
+        visibility: hidden !important;
+        height: 0px !important;
+        position: fixed !important;
+    }
+    div[data-testid="stDecoration"] {
+        visibility: hidden !important;
+        height: 0px !important;
+        position: fixed !important;
+    }
+    div[data-testid="stStatusWidget"] {
+        visibility: hidden !important;
+        height: 0px !important;
+        position: fixed !important;
+    }
+    #MainMenu, footer, header {
+        visibility: hidden !important;
+        height: 0px !important;
+    }
+    .viewerBadge_container__1QSob,
+    .viewerBadge_link__qRIco,
+    .css-164nlkn,
+    .st-emotion-cache-cio0dv {
+        display: none !important;
+    }
+    </style>
+"""
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 
 st.markdown("""
     <style>
