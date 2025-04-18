@@ -188,6 +188,9 @@ with col_inputs:
    
     if submitted:
         st.session_state.show_result = True
+    st.markdown("""
+    <div id="custom-divider" style="margin-top: 0px; margin-bottom: 8px; border-top: 1px solid #ddd;"></div>
+    """, unsafe_allow_html=True)
       
 with col_img:
     st.markdown("#### 🚗 เลือกรถที่คุณสนใจ (Select Car & Options)")
