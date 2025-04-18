@@ -138,7 +138,7 @@ col_img, col_inputs = st.columns([4, 2])
 # --------- Input Column ---------
 st.markdown("##")
 with col_inputs:
-    st.markdown('##### รุ่นรถ <small>(Car Model)</small>', unsafe_allow_html=True)
+    st.markdown('##### 🚗 รุ่นรถ <small>(Car Model)</small>', unsafe_allow_html=True)
     
     model_options = sorted(car_df["model"].unique())
     if 'selected_model' not in st.session_state or st.session_state.selected_model not in model_options:
@@ -182,8 +182,10 @@ with col_inputs:
         down_payment_amount = (down_percent / 100) * price
         input_valid = True
 
-    st.caption(f"💸 เงินดาวน์ที่เลือก : ฿{down_payment_amount:,.0f} ({int(down_percent)}%)")
-    period = st.selectbox("เลือกระยะเวลาการผ่อน (เดือน) (Select your monthly payment plan)", [48, 60, 72, 84], key="period_months")
+    if input_type == "เปอร์เซ็นต์ (%) (Percentage)":
+    st.caption(f"💸 เงินดาวน์ : ฿{down_payment_amount:,.0f} ({int(down_percent)}%)")
+
+    period = st.selectbox("เลือกระยะเวลาการผ่อน (Select your monthly payment plan)", [48, 60, 72, 84], key="period_months")
     submitted = st.button("🧮 คำนวณค่างวด (Calculate Your Payment)")
    
     if submitted:
@@ -318,9 +320,7 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
                          total_interest = loan_amount * (interest_rate / 100) * (period / 12)
                          monthly_installment = (loan_amount + total_interest) / period
 
-                         st.markdown("### 📊 สรุปการผ่อนชำระ")
-                         st.markdown("<div style='margin-top: -12px; font-size: 14px; color: gray;'>(Installment Summary)</div>", unsafe_allow_html=True)
-
+                         st.markdown("#### 📊 สรุปการผ่อนชำระ <small>(Installment Summary)</small>", unsafe_allow_html=True)
                          res_col1, res_col2, res_col3 = st.columns(3)
                          rounded_down_payment = math.ceil(down_payment_amount)
                          res_col1.metric("เงินดาวน์ที่เลือก (Your Down Payment)", f"฿{rounded_down_payment:,.0f} ({int(down_percent)}%)")
