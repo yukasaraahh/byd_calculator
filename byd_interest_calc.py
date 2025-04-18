@@ -1,13 +1,15 @@
 import streamlit as st
 st.set_page_config(page_title="คำนวณค่างวดรถ BYD | BYD ชลบุรี ออโตโมทีฟ", page_icon="🚗", layout="wide")
 
-hide_streamlit_style = """
-            <style>
-            #MainMenu {visibility: hidden;}
-            footer {visibility: hidden;}
-            </style>
-            """
-st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
+st.markdown("""
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    .css-cio0dv {display: none !important;}  /* Hides "Built with Streamlit" completely */
+    .viewerBadge_container__1QSob {display: none !important;}  /* In case it's using badge container */
+    </style>
+""", unsafe_allow_html=True)
 
 st.markdown("""
     <style>
