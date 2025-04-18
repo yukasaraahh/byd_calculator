@@ -3,6 +3,14 @@ st.set_page_config(page_title="คำนวณค่างวดรถ BYD | BYD
 
 st.markdown("""
     <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    </style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+    <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;700&display=swap');
 
     * {
@@ -140,12 +148,6 @@ col_img, col_inputs = st.columns([4, 2])
 st.markdown("##")
 with col_inputs:
     st.markdown("##### 🚗 รุ่นรถ <small>(Car Model)</small>", unsafe_allow_html=True)
-    st.markdown("""
-        <div style="background-color: #111827; color: white; padding: 8px 20px; 
-                    border-radius: 999px; display: inline-block; font-weight: 600; font-size: 16px; margin: 20px 0;">
-        🚗 รุ่นรถ <span style='opacity: 0.6;'>Car Model</span>
-        </div>
-        """, unsafe_allow_html=True)
     
     model_options = sorted(car_df["model"].unique())
     if 'selected_model' not in st.session_state or st.session_state.selected_model not in model_options:
