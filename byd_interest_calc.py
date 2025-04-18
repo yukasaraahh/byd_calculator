@@ -154,7 +154,7 @@ with col_inputs:
     price = car_row["price"].values[0] if not car_row.empty else 0
     image_url_for_display = convert_drive_link_to_direct_image_url(car_row["image_url"].values[0]) if not car_row.empty else None
 
-    st.metric(label="💰 ราคาจำหน่าย (Car Price)", value=f"฿{price:,.2f}")
+    st.metric(label="💰 ราคาจำหน่าย (Car Price)", value=f"฿{price:,.0f}")
     st.markdown("---")
     st.markdown("##### 💵 คำนวณค่างวด <small>(Estimate Your Monthly Payment)</small>", unsafe_allow_html=True)
 
@@ -318,7 +318,9 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
                          total_interest = loan_amount * (interest_rate / 100) * (period / 12)
                          monthly_installment = (loan_amount + total_interest) / period
 
-                         st.markdown("#### 📊 สรุปการผ่อนชำระ <small>(Installment Summary)</small>", unsafe_allow_html=True)
+                         st.markdown("### 📊 สรุปการผ่อนชำระ")
+                         st.markdown("<div style='margin-top: -12px; font-size: 14px; color: gray;'>(Installment Summary)</div>", unsafe_allow_html=True)
+
                          res_col1, res_col2, res_col3 = st.columns(3)
                          rounded_down_payment = math.ceil(down_payment_amount)
                          res_col1.metric("เงินดาวน์ที่เลือก (Your Down Payment)", f"฿{rounded_down_payment:,.0f} ({int(down_percent)}%)")
