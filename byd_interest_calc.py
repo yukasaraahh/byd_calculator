@@ -166,7 +166,7 @@ with col_inputs:
 
     if input_type == "จำนวนเงิน (Amount - THB)":
         st.text("")
-        st.markdown("**จำนวนเงินดาวน์** <small>(Enter Down Payment Amount)</small>", unsafe_allow_html=True)
+        st.markdown('<div class="no-bottom-space"><strong>จำนวนเงินดาวน์</strong> <small>(Enter Down Payment Amount)</small></div>', unsafe_allow_html=True)
         raw_input = st.text_input(label="", value=f"{price*0.1:,.0f}", key="dp_amount_thb")
 
         try:
