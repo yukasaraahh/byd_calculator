@@ -3,12 +3,14 @@ st.set_page_config(page_title="คำนวณค่างวดรถ BYD | BYD
 
 st.markdown("""
     <style>
+    html, body, [data-testid="stAppViewContainer"], .main, .block-container {
+        overflow: visible !important;
+        height: auto !important;
+    }
+
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
-    .css-164nlkn {display: none;} /* Some Streamlit versions use this for footer */
-    .css-h5rgaw {display: none;} /* Sometimes used for the 'Built with Streamlit' */
-    .css-cio0dv {display: none;} /* Mobile version or fallback footer */
     </style>
 """, unsafe_allow_html=True)
 
@@ -390,6 +392,6 @@ st.markdown("""
     </style>
 
     <div class="custom-footer">
-        © 2025 <strong>BYD ชลบุรี ออโตโมทีฟ</strong> | <a href="https://www.bydchonburi.com" target="_blank" style="color:#666;text-decoration:none;">www.bydchonburi.com</a>
+        © 2025 <strong>BYD ชลบุรี ออโตโมทีฟ</strong> | <a href="https://www.bydchonburi.com" target="_blank" style="color:#666;text-decoration:none;">bydchonburi.com</a>
     </div>
 """, unsafe_allow_html=True)
