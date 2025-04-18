@@ -189,7 +189,7 @@ with col_inputs:
     if submitted:
         st.session_state.show_result = True
     st.markdown("""
-    <div id="custom-divider" style="margin-top: 0px; margin-bottom: 8px; border-top: 1px solid #ddd;"></div>
+    <div id="custom-divider" style="margin-top: 5px; margin-bottom: 8px; border-top: 1px solid #ddd;"></div>
     """, unsafe_allow_html=True)
       
 with col_img:
@@ -202,9 +202,6 @@ with col_img:
 
 # --------- Calculations & Results ---------
 period_options = [48, 60, 72, 84]
-st.markdown("""
-<div style='margin: 0 0 4px 0; border-top: 1px solid #ddd;'></div>
-""", unsafe_allow_html=True)
 
 if st.session_state.show_result and input_valid and price > 0 and not down_payment_df.empty:
 
