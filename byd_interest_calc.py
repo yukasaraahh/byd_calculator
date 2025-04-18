@@ -166,7 +166,9 @@ with col_inputs:
 
     if input_type == "จำนวนเงิน (Amount - THB)":
         st.text("")
-        raw_input = st.text_input("ระบุจำนวนเงินดาวน์ (Enter Your Down Payment Amount)", value=f"{price*0.1:,.0f}", key="dp_amount_thb")
+        st.markdown("**จำนวนเงินดาวน์** <small>(Enter Down Payment Amount)</small>", unsafe_allow_html=True)
+        raw_input = st.text_input(label="", value=f"{price*0.1:,.0f}", key="dp_amount_thb")
+
         try:
             down_payment_amount = float(raw_input.replace(",", ""))
             down_percent = (down_payment_amount / price) * 100
