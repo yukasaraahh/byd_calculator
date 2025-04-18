@@ -369,6 +369,9 @@ st.markdown("""
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
+    .viewerBadge_container__1QSob {display: none !important;}
+    </style>
+""", unsafe_allow_html=True)
 
     .custom-footer {
         position: fixed;
@@ -385,6 +388,6 @@ st.markdown("""
     </style>
 
     <div class="custom-footer">
-        © 2025 BYD ชลบุรี ออโตโมทีฟ | All rights reserved
+        © 2025 <strong>BYD ชลบุรี ออโตโมทีฟ</strong> | <a href="https://www.bydchonburi.com" target="_blank" style="color:#666;text-decoration:none;">www.bydchonburi.com</a>
     </div>
 """, unsafe_allow_html=True)
