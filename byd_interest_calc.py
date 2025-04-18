@@ -166,8 +166,7 @@ with col_inputs:
 
     if input_type == "จำนวนเงิน (Amount - THB)":
         st.text("")
-        st.markdown('<div class="no-bottom-space"><strong>จำนวนเงินดาวน์</strong> <small>(Enter Down Payment Amount)</small></div>', unsafe_allow_html=True)
-        raw_input = st.text_input(label="", value=f"{price*0.1:,.0f}", key="dp_amount_thb")
+        raw_input = st.text_input("จำนวนเงินดาวน์ (Enter Down Payment Amount)", value=f"{price*0.1:,.0f}", key="dp_amount_thb")
 
         try:
             down_payment_amount = float(raw_input.replace(",", ""))
@@ -179,7 +178,7 @@ with col_inputs:
         percent_options = [int(x) for x in sorted(down_payment_df['down_payment'].dropna().unique())]
         default_percent = 10 if 10 in percent_options else percent_options[0]
         st.text("")
-        selected_percent = st.select_slider("เลือกเปอร์เซ็นต์เงินดาวน์ (Select Down Payment Percentage)", options=percent_options, value=default_percent, format_func=lambda x: f"{x}%", key="dp_percent_slider")
+        selected_percent = st.select_slider("เปอร์เซ็นต์ดาวน์ (Select Down Payment %)", options=percent_options, value=default_percent, format_func=lambda x: f"{x}%", key="dp_percent_slider")
         down_percent = float(selected_percent)
         down_payment_amount = (down_percent / 100) * price
         input_valid = True
@@ -187,7 +186,7 @@ with col_inputs:
     if input_type == "เปอร์เซ็นต์ (%) (Percentage)":
         st.caption(f"💸 เงินดาวน์ : ฿{down_payment_amount:,.0f} ({int(down_percent)}%)")
 
-    period = st.selectbox("เลือกระยะเวลาการผ่อน (Select your monthly payment plan)", [48, 60, 72, 84], key="period_months")
+    period = st.selectbox("ระยะเวลาผ่อน (Select Installment Period)", [48, 60, 72, 84], key="period_months")
     submitted = st.button("🧮 คำนวณค่างวด (Calculate Your Payment)")
    
     if submitted:
