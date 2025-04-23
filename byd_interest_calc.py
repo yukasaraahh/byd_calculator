@@ -174,9 +174,15 @@ st.markdown("##")
 with col_inputs:
     st.markdown("##### 🚗 รุ่นรถ <small>(Car Model)</small>", unsafe_allow_html=True)
     
-    model_options = sorted(car_df["model"].unique())
+    # ✅ อ่านค่าจาก URL พารามิเตอร์ ถ้ามี (ต้องอยู่ก่อน selectbox)
+    params = st.query_params
+    model_param = params.get("model", None)
+    if model_param and model_param in model_options:
+        st.session_state.selected_model = model_param
+
+    # ✅ selectbox พร้อมค่า default จาก session หรือ URL param
     if 'selected_model' not in st.session_state or st.session_state.selected_model not in model_options:
-         st.session_state.selected_model = model_options[0]
+        st.session_state.selected_model = model_options[0]
         
     selected_model = st.selectbox("เลือกรุ่นรถที่ต้องการ (Select Car Model)", model_options, key="selected_model")
 
