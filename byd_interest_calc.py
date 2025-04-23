@@ -176,7 +176,7 @@ with col_inputs:
     
     model_options = sorted(car_df["model"].unique())
     if 'selected_model' not in st.session_state or st.session_state.selected_model not in model_options:
-    st.session_state.selected_model = model_options[0]
+         st.session_state.selected_model = model_options[0]
         
     selected_model = st.selectbox("เลือกรุ่นรถที่ต้องการ (Select Car Model)", model_options, key="selected_model")
 
