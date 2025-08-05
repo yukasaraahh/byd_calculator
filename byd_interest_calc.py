@@ -1,4 +1,11 @@
 import streamlit as st
+import pandas as pd
+import io
+import re
+import math
+from io import StringIO
+import requests
+
 st.set_page_config(page_title="คำนวณค่างวดรถ BYD | BYD ชลบุรี ออโตโมทีฟ", page_icon="🚗", layout="wide")
 
 hide_streamlit_style = """
@@ -33,31 +40,19 @@ hide_streamlit_style = """
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;700&display=swap');
-
     * {
         font-family: 'Noto Sans Thai', sans-serif !important;
     }
-
     html, body, div, span, input, select, button, label, textarea,
     .css-1d391kg, .css-ffhzg2, .css-1cpxqw2, .css-1offfwp, .stButton button {
         font-family: 'Noto Sans Thai', sans-serif !important;
     }
-x
-
     </style>
 """, unsafe_allow_html=True)
 
-
-import pandas as pd
-import io
-import re
-import math
-from io import StringIO
-import requests
 
 # --------- Functions ---------
 def convert_google_sheet_link_to_csv(shared_link: str) -> str:
@@ -93,17 +88,20 @@ def read_google_sheet_csv(csv_url):
         st.error(f"❌ Failed to read or parse spreadsheet: {e}")
         return pd.DataFrame()
 
+
 # --------- Load data ---------
 # Convert share links to direct CSV export links
 car_url = convert_google_sheet_link_to_csv("https://docs.google.com/spreadsheets/d/1rypFrBiLNemhOy3Gn5_0UiC7o4zP9wDrVXafvd7TxNc/edit?gid=442434100")
 car_df = read_google_sheet_csv(car_url)
 
+# URL for the standard down payment rates sheet
 down_payment_url = convert_google_sheet_link_to_csv("https://docs.google.com/spreadsheets/d/13bc_Vk1G-CDZVkCswlwYakQM-HuQMXi_K0HLG6tdVEY/edit?gid=569887943")
 down_payment_df = read_google_sheet_csv(down_payment_url)
 
-# URL for the new BYD SEAL Premium & Performance promo rates sheet
+# URL for the new BYD SEAL Premium & Dynamic promo rates sheet
 seal_promo_url = convert_google_sheet_link_to_csv("https://docs.google.com/spreadsheets/d/13bc_Vk1G-CDZVkCswlwYakQM-HuQMXi_K0HLG6tdVEY/edit?gid=1853511418")
 seal_promo_df = read_google_sheet_csv(seal_promo_url)
+
 
 # --- Data Cleaning and Preparation ---
 
@@ -113,8 +111,8 @@ if not car_df.empty:
         st.error("❌ Car data sheet is missing required columns ('model', 'sub model', 'price', 'image_url').")
         st.stop()
     car_df['price'] = pd.to_numeric(car_df['price'], errors='coerce')
-    car_df.dropna(subset=['price'], inplace=True)  # Remove rows where price isn't valid
-    car_df = car_df[car_df['price'] > 0]  # Ensure price is positive
+    car_df.dropna(subset=['price'], inplace=True)
+    car_df = car_df[car_df['price'] > 0]
     if car_df.empty:
         st.error("❌ No valid car data found after cleaning (check prices).")
         st.stop()
@@ -122,59 +120,46 @@ else:
     st.error("❌ Failed to load car data. Cannot proceed.")
     st.stop()
 
-# Down Payment Data (Standard rate)
+# Standard Rates Data (down_payment_df)
 if not down_payment_df.empty:
     if not all(col in down_payment_df.columns for col in ['ดาวน์', '48', '60', '72', '84']):
-         st.error("❌ Down payment data sheet is missing required columns ('ดาวน์', '48', '60', '72', '84'). Calculation might fail.")
+         st.error("❌ Down payment data sheet is missing required columns ('ดาวน์', '48', '60', '72', '84').")
          down_payment_df = pd.DataFrame(columns=['down_payment', '48', '60', '72', '84'])
     else:
         down_payment_df = down_payment_df[['ดาวน์', '48', '60', '72', '84']].drop_duplicates()
         down_payment_df = down_payment_df.rename(columns={'ดาวน์': 'down_payment'})
-        down_payment_df['down_payment'] = down_payment_df['down_payment'].astype(str).str.replace('%', '').str.strip()
-        down_payment_df['down_payment'] = pd.to_numeric(down_payment_df['down_payment'], errors='coerce')
+        down_payment_df['down_payment'] = pd.to_numeric(down_payment_df['down_payment'].astype(str).str.replace('%', '').str.strip(), errors='coerce')
         down_payment_df.dropna(subset=['down_payment'], inplace=True)
-
         for col in ['48', '60', '72', '84']:
              if col in down_payment_df.columns:
-                down_payment_df[col] = down_payment_df[col].astype(str).str.replace('%', '').str.strip()
-                down_payment_df[col] = pd.to_numeric(down_payment_df[col], errors='coerce')
+                down_payment_df[col] = pd.to_numeric(down_payment_df[col].astype(str).str.replace('%', '').str.strip(), errors='coerce')
         if down_payment_df.empty:
-             st.warning("⚠️ No valid down payment percentage tiers found after cleaning.")
+             st.warning("⚠️ No valid standard down payment percentage tiers found after cleaning.")
 else:
-    st.error("❌ Failed to load down payment data. Calculations will not be possible.")
+    st.error("❌ Failed to load down payment data. Calculations for non-promo cars will fail.")
     down_payment_df = pd.DataFrame(columns=['down_payment', '48', '60', '72', '84'])
 
 # SEAL Promo Rates Data (seal_promo_df)
-
 if not seal_promo_df.empty:
-    # Debug: show what columns we actually have
-    st.write("DEBUG - SEAL Promo Columns:", seal_promo_df.columns.tolist())
-    st.write("DEBUG - SEAL Promo Data:", seal_promo_df.head())
-    
-    if not all(col in seal_promo_df.columns for col in ['ดาวน์', '48', '60', '72', '84']):
+    if not all(col in seal_promo_df.columns for col in ['ดาวน์', 'ผ่อน 48 งวด', 'ผ่อน 60 งวด', 'ผ่อน 72 งวด', 'ผ่อน 84 งวด']):
         st.error("❌ SEAL promo rates sheet is missing required columns.")
-        st.write("Available columns:", seal_promo_df.columns.tolist())
         seal_promo_df = pd.DataFrame(columns=['down_payment', '48', '60', '72', '84'])
     else:
-        # Only select the columns we need, no extra renaming
-        seal_promo_df = seal_promo_df[['ดาวน์', '48', '60', '72', '84']].drop_duplicates()
-        seal_promo_df = seal_promo_df.rename(columns={'ดาวน์': 'down_payment'})
-        
-        # Clean the down payment column
-        seal_promo_df['down_payment'] = seal_promo_df['down_payment'].astype(str).str.replace('%', '').str.strip()
-        seal_promo_df['down_payment'] = pd.to_numeric(seal_promo_df['down_payment'], errors='coerce')
+        seal_promo_df = seal_promo_df[['ดาวน์', 'ผ่อน 48 งวด', 'ผ่อน 60 งวด', 'ผ่อน 72 งวด', 'ผ่อน 84 งวด']].drop_duplicates()
+        seal_promo_df = seal_promo_df.rename(columns={
+            'ดาวน์': 'down_payment',
+            'ผ่อน 48 งวด': '48',
+            'ผ่อน 60 งวด': '60',
+            'ผ่อน 72 งวด': '72',
+            'ผ่อน 84 งวด': '84'
+        })
+        seal_promo_df['down_payment'] = pd.to_numeric(seal_promo_df['down_payment'].astype(str).str.replace('%', '').str.strip(), errors='coerce')
         seal_promo_df.dropna(subset=['down_payment'], inplace=True)
-        
-        # Clean the period columns
         for col in ['48', '60', '72', '84']:
             if col in seal_promo_df.columns:
-                seal_promo_df[col] = seal_promo_df[col].astype(str).str.replace('%', '').str.strip()
-                seal_promo_df[col] = pd.to_numeric(seal_promo_df[col], errors='coerce')
-        
+                seal_promo_df[col] = pd.to_numeric(seal_promo_df[col].astype(str).str.replace('%', '').str.strip(), errors='coerce')
         if seal_promo_df.empty:
             st.warning("⚠️ No valid SEAL promo percentage tiers found after cleaning.")
-        else:
-            st.write("DEBUG - Cleaned SEAL Promo Data:", seal_promo_df)
 else:
     st.error("❌ Failed to load SEAL promo rates. Calculations for these models will fail.")
     seal_promo_df = pd.DataFrame(columns=['down_payment', '48', '60', '72', '84'])
@@ -183,17 +168,14 @@ else:
 # ✅ Session state setup
 if "show_result" not in st.session_state:
     st.session_state.show_result = False
-
 # ✅ Initialize variables before form logic
 image_url_for_display = None
 price = 0
 input_valid = False
-
 # ✅ Percent slider data - always defined
-percent_options_raw = sorted(down_payment_df['down_payment'].unique())
+percent_options_raw = sorted(down_payment_df['down_payment'].unique()) if 'down_payment' in down_payment_df.columns else []
 percent_options = [int(x) for x in percent_options_raw if not pd.isna(x)]
-default_percent = 10 if 10 in percent_options else percent_options[0]
-
+default_percent = 10 if 10 in percent_options else percent_options[0] if percent_options else 0
 # ✅ Image render helper
 def render_image():
     global image_url_for_display
@@ -201,14 +183,9 @@ def render_image():
         st.image(image_url_for_display, caption=f"{selected_model} - {selected_submodel}", use_container_width=True)
     elif price > 0:
         st.info("ℹ️ No image available for this model.")
-
-
 # --------- App layout ---------
-
-
 # --------- Define main layout columns ---------
 col_img, col_inputs = st.columns([4, 2])
-
 # --------- Input Column ---------
 st.markdown("##")
 with col_inputs:
@@ -219,29 +196,22 @@ with col_inputs:
          st.session_state.selected_model = model_options[0]
         
     selected_model = st.selectbox("เลือกรุ่นรถที่ต้องการ (Select Car Model)", model_options, key="selected_model")
-
     submodel_df = car_df[car_df["model"] == selected_model].sort_values(by="price")
     submodel_options = submodel_df["sub model"].tolist()
     selected_submodel = st.selectbox("เลือกรุ่นย่อย (Select Submodel)", submodel_options, key="selected_submodel")
-
     car_row = car_df[(car_df["model"] == selected_model) & (car_df["sub model"] == selected_submodel)]
     price = car_row["price"].values[0] if not car_row.empty else 0
     image_url_for_display = convert_drive_link_to_direct_image_url(car_row["image_url"].values[0]) if not car_row.empty else None
-
     st.metric(label="💰 ราคาจำหน่าย (Car Price)", value=f"฿{price:,.0f}")
     st.markdown("---")
     st.markdown("##### 💵 คำนวณค่างวด <small>(Estimate Your Monthly Payment)</small>", unsafe_allow_html=True)
-
     input_type = st.radio("💰 เลือกรูปแบบเงินดาวน์ (Down Payment Method)", ["จำนวนเงิน (Amount - THB)", "เปอร์เซ็นต์ (%) (Percentage)"], key="dp_type", horizontal=True)
-
     down_payment_amount = 0.0
     down_percent = 0.0
     input_valid = False
-
     if input_type == "จำนวนเงิน (Amount - THB)":
         st.text("")
         raw_input = st.text_input("จำนวนเงินดาวน์ (Enter Down Payment Amount)", value=f"{price*0.1:,.0f}", key="dp_amount_thb")
-
         try:
             down_payment_amount = float(raw_input.replace(",", ""))
             down_percent = (down_payment_amount / price) * 100
@@ -250,16 +220,14 @@ with col_inputs:
             st.warning("⚠️ โปรดใส่เงินดาวน์ขั้นต่ำที่ 5% ของราคารถ (Please enter a down payment of at least 5% of the car price)")
     else:
         percent_options = [int(x) for x in sorted(down_payment_df['down_payment'].dropna().unique())]
-        default_percent = 10 if 10 in percent_options else percent_options[0]
+        default_percent = 10 if 10 in percent_options else (percent_options[0] if percent_options else 0)
         st.text("")
         selected_percent = st.select_slider("เปอร์เซ็นต์ดาวน์ (Select Down Payment %)", options=percent_options, value=default_percent, format_func=lambda x: f"{x}%", key="dp_percent_slider")
         down_percent = float(selected_percent)
         down_payment_amount = (down_percent / 100) * price
         input_valid = True
-
     if input_type == "เปอร์เซ็นต์ (%) (Percentage)":
         st.caption(f"💸 เงินดาวน์ : ฿{down_payment_amount:,.0f} ({int(down_percent)}%)")
-
     period = st.selectbox("ระยะเวลาผ่อน (Select Installment Period)", [48, 60, 72, 84], key="period_months")
     submitted = st.button("🧮 คำนวณค่างวด (Calculate Your Payment)")
    
@@ -273,187 +241,141 @@ with col_img:
     elif price > 0:
         st.info("ℹ️ No image available for this model.")
     
-
 # --------- Calculations & Results ---------
 period_options = [48, 60, 72, 84]
 st.markdown("""
 <div style='margin: 0 0 12px 0; border-top: 1px solid #ddd;'></div>
 """, unsafe_allow_html=True)
-
 if st.session_state.show_result and input_valid and price > 0 and not down_payment_df.empty:
-
-    # If the down payment equals (or exceeds) the car's price, show an info message.
     if down_payment_amount >= price:
          st.info("เงินดาวน์เท่ากับราคารถ ไม่สามารถจัดไฟแนนซ์ได้ (The down payment is equal to the car's price. No financing is required.)")
+         st.stop()
+    
+    # Determine which rate table to use based on the selected model
+    # Apply special promo rates ONLY to BYD SEAL Dynamic and Premium
+    is_seal_special = (
+        "byd seal" in selected_model.strip().lower() and
+        selected_submodel.strip().lower() in ["dynamic", "premium"]
+    )
+    
+    if is_seal_special and not seal_promo_df.empty:
+        rate_df = seal_promo_df
+        promo_info = f"อัตราดอกเบี้ยพิเศษสำหรับ {selected_model} {selected_submodel}"
     else:
-         # Check if this is a BYD SEAL Dynamic or Premium model for special rates
-         is_seal_special = (selected_model == "BYD SEAL" and 
-                           selected_submodel in ["Dynamic", "Premium"])
-         
-         # Debug info
-         st.write(f"DEBUG - Selected Model: {selected_model}")
-         st.write(f"DEBUG - Selected Submodel: {selected_submodel}")
-         st.write(f"DEBUG - Is SEAL Special: {is_seal_special}")
-         st.write(f"DEBUG - SEAL Promo DF Empty: {seal_promo_df.empty}")
-         
-         # Choose the appropriate rate table
-         if is_seal_special and not seal_promo_df.empty:
-             rate_df = seal_promo_df
-             rate_type = "Special SEAL Rate"
-             st.write("DEBUG - Using SEAL Promo Rates")
-         else:
-             rate_df = down_payment_df
-             rate_type = "Standard Rate"
-             st.write("DEBUG - Using Standard Rates")
-         
-         st.write(f"DEBUG - Rate DF columns: {rate_df.columns.tolist()}")
-         st.write(f"DEBUG - Rate DF data: {rate_df}")
-         
-         available_percents = sorted(rate_df['down_payment'].unique())
-         matched_percent = max([p for p in available_percents if p <= down_percent], default=None)
-         
-         st.write(f"DEBUG - Available percents: {available_percents}")
-         st.write(f"DEBUG - Down percent: {down_percent}")
-         st.write(f"DEBUG - Matched percent: {matched_percent}")
+        rate_df = down_payment_df
+        promo_info = ""
 
-         # Initialize variables for the 30% plan branch
-         qualified_periods_30_plan = []
-         is_using_30_plan = False
+    # Check if a valid rate table was selected and proceed with calculation
+    if rate_df.empty:
+        st.error("❌ Cannot perform calculations. The selected rate data table is missing or invalid.")
+        st.stop()
 
-         # 30% plan logic: if down payment is above 30% and a 30% tier exists
-         if down_percent > 30 and 30.0 in rate_df['down_payment'].values:
-             thirty_plan_row = rate_df[rate_df["down_payment"] == 30.0].iloc[0]
-             loan_amount = price - down_payment_amount
-
-             for p in period_options:
-                 period_col = str(p)
-                 if period_col in thirty_plan_row.index and pd.notna(thirty_plan_row[period_col]):
-                     try:
-                         interest_30 = float(thirty_plan_row[period_col])
-                         interest_amount = loan_amount * (interest_30 / 100) * (p / 12)
-                         if interest_amount > 25000:
-                             monthly_30 = (loan_amount + interest_amount) / p
-                             qualified_periods_30_plan.append({
-                                "Period": f"{p} months",
-                                "Interest (30% Plan Rate)": f"{interest_30:.2f}%",
-                                "Monthly Installment": f"฿{monthly_30:,.2f}",
-                             })
-                     except (ValueError, TypeError, KeyError, ZeroDivisionError):
-                         continue
-
-             if qualified_periods_30_plan:
-                is_using_30_plan = True
-                df_30 = pd.DataFrame(qualified_periods_30_plan)
-                df_30.insert(0, "Option", range(1, len(df_30) + 1))
-                df_30.set_index("Option", inplace=True)
-                
-                # Add special rate indicator if applicable
-                rate_indicator = "🌟 (Special SEAL Rate)" if is_seal_special else ""
-                
-                st.markdown(f"""
-                <div style="background-color: #e6f4ea; padding: 1rem; border-radius: 10px; border-left: 6px solid #34a853;">
-                ✅ <strong>ด้วยเงินดาวน์ {down_payment_amount:,.0f} บาท ({down_percent:.2f}%) {rate_indicator}</strong> 
-                แผนที่คุณเลือกไม่เข้าเงื่อนไขการจัดไฟแนนซ์ แต่ยังมีแผนผ่อนชำระระยะยาวอื่น ๆ ที่คุณสามารถเลือกได้ตามรายละเอียดด้านล่าง<br>
-                <small><em>(The selected plan is not eligible for special financing rates, but alternative longer-term plans are available below.)</em></small>
-                </div>
-                """, unsafe_allow_html=True)
-                 
-                 # 🧩 Mobile-friendly style for vertical layout
-                st.markdown("""
-                <style>
-                .financing-card {
-                    border: 1px solid #e0e0e0;
-                    border-radius: 10px;
-                    padding: 16px;
-                    margin-bottom: 12px;
-                    background-color: #ffffff;
-                    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-                    font-family: 'Noto Sans Thai', sans-serif;
-                }
-                .financing-card h4 {
-                    margin: 0 0 10px;
-                    font-size: 16px;
-                    font-weight: 600;
-                }
-                .financing-card .item {
-                    margin: 6px 0;
-                    font-size: 14.5px;
-                }
-                .financing-card .item strong {
-                    color: #333;
-                }
-                .financing-card .price {
-                    font-size: 16px;
-                    font-weight: bold;
-                    color: #e63946;
-                }
-                </style>
-                """, unsafe_allow_html=True)
+    # Handle the 30% plan logic
+    if down_percent > 30 and 30.0 in rate_df['down_payment'].values:
+        thirty_plan_row = rate_df[rate_df["down_payment"] == 30.0].iloc[0]
+        loan_amount = price - down_payment_amount
+        qualified_periods_30_plan = []
+        for p in period_options:
+            period_col = str(p)
+            if period_col in thirty_plan_row.index and pd.notna(thirty_plan_row[period_col]):
+                try:
+                    interest_30 = float(thirty_plan_row[period_col])
+                    interest_amount = loan_amount * (interest_30 / 100) * (p / 12)
+                    if interest_amount > 25000:
+                        monthly_30 = (loan_amount + interest_amount) / p
+                        qualified_periods_30_plan.append({
+                           "Period": f"{p} months",
+                           "Interest (30% Plan Rate)": f"{interest_30:.2f}%",
+                           "Monthly Installment": f"฿{monthly_30:,.2f}",
+                        })
+                except (ValueError, TypeError, KeyError, ZeroDivisionError):
+                    continue
+        if qualified_periods_30_plan:
+            df_30 = pd.DataFrame(qualified_periods_30_plan)
+            df_30.insert(0, "Option", range(1, len(df_30) + 1))
+            df_30.set_index("Option", inplace=True)
             
-                # 🪄 Render each option as a vertical card
-                for i, row in df_30.reset_index().iterrows():
-                    st.markdown(f"""
-                    <div class="financing-card">
-                        <h4>📌 Option {i + 1}</h4>
-                        <div class="item">📅 <strong>ระยะเวลาผ่อน:</strong> {row['Period']}</div>
-                        <div class="item">📈 <strong>อัตราดอกเบี้ย:</strong> {row['Interest (30% Plan Rate)']}</div>
-                        <div class="item price">💳 ยอดผ่อนรายเดือน: {row['Monthly Installment']} / เดือน</div>
-                    </div>
-                    """, unsafe_allow_html=True)
-             else:
-                st.markdown("""
-                <div style="background-color:#fff3cd; padding: 16px; border-left: 6px solid #ffeeba; border-radius: 4px;">
-                😕 <strong>ไม่มีแผนผ่อนชำระที่เข้าเงื่อนไข</strong> เนื่องจากดอกเบี้ยที่คำนวณไม่ถึงเกณฑ์ขั้นต่ำที่กำหนด  
-                โปรดลองลดจำนวนเงินดาวน์ลง เพื่อดูตัวเลือกแผนผ่อนชำระอื่น ๆ  
-                <br><br><small>(There are no qualifying installment plans because the calculated interest does not meet the minimum required threshold.  
-                Please try lowering your down payment to view other available financing options.)</small>
+            rate_indicator = "🌟" if is_seal_special else ""
+            st.markdown(f"""
+            <div style="background-color: #e6f4ea; padding: 1rem; border-radius: 10px; border-left: 6px solid #34a853;">
+            ✅ <strong>ด้วยเงินดาวน์ {down_payment_amount:,.0f} บาท ({down_percent:.2f}%) {rate_indicator}</strong> 
+            แผนที่คุณเลือกไม่เข้าเงื่อนไขการจัดไฟแนนซ์ แต่ยังมีแผนผ่อนชำระระยะยาวอื่น ๆ ที่คุณสามารถเลือกได้ตามรายละเอียดด้านล่าง<br>
+            <small><em>(The selected plan is not eligible for special financing rates, but alternative longer-term plans are available below.)</em></small>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            st.markdown("""
+            <style>
+            .financing-card { border: 1px solid #e0e0e0; border-radius: 10px; padding: 16px; margin-bottom: 12px; background-color: #ffffff; box-shadow: 0 1px 4px rgba(0,0,0,0.05); font-family: 'Noto Sans Thai', sans-serif; }
+            .financing-card h4 { margin: 0 0 10px; font-size: 16px; font-weight: 600; }
+            .financing-card .item { margin: 6px 0; font-size: 14.5px; }
+            .financing-card .item strong { color: #333; }
+            .financing-card .price { font-size: 16px; font-weight: bold; color: #e63946; }
+            </style>
+            """, unsafe_allow_html=True)
+        
+            for i, row in df_30.reset_index().iterrows():
+                st.markdown(f"""
+                <div class="financing-card">
+                    <h4>📌 Option {i + 1}</h4>
+                    <div class="item">📅 <strong>ระยะเวลาผ่อน:</strong> {row['Period']}</div>
+                    <div class="item">📈 <strong>อัตราดอกเบี้ย:</strong> {row['Interest (30% Plan Rate)']}</div>
+                    <div class="item price">💳 ยอดผ่อนรายเดือน: {row['Monthly Installment']} / เดือน</div>
                 </div>
                 """, unsafe_allow_html=True)
+            st.stop()
+        else:
+            st.markdown("""
+            <div style="background-color:#fff3cd; padding: 16px; border-left: 6px solid #ffeeba; border-radius: 4px;">
+            😕 <strong>ไม่มีแผนผ่อนชำระที่เข้าเงื่อนไข</strong> เนื่องจากดอกเบี้ยที่คำนวณไม่ถึงเกณฑ์ขั้นต่ำที่กำหนด  
+            โปรดลองลดจำนวนเงินดาวน์ลง เพื่อดูตัวเลือกแผนผ่อนชำระอื่น ๆ  
+            <br><br><small>(There are no qualifying installment plans because the calculated interest does not meet the minimum required threshold.  
+            Please try lowering your down payment to view other available financing options.)</small>
+            </div>
+            """, unsafe_allow_html=True)
+            st.stop()
+    
+    # Regular calculation logic for all other cases
+    available_percents = sorted(rate_df['down_payment'].unique())
+    matched_percent = max([p for p in available_percents if p <= down_percent], default=None)
+    
+    if matched_percent is not None:
+        interest_row = rate_df[rate_df['down_payment'] == matched_percent]
+        if not interest_row.empty:
+            period_col = str(period)
+            if period_col in interest_row.columns and pd.notna(interest_row[period_col].values[0]):
+                try:
+                    interest_rate = float(interest_row[period_col].values[0])
+                    loan_amount = price - down_payment_amount
+                    total_interest = loan_amount * (interest_rate / 100) * (period / 12)
+                    monthly_installment = (loan_amount + total_interest) / period
+                    
+                    rate_indicator = " 🌟" if is_seal_special else ""
+                    st.markdown(f"#### 📊 สรุปการผ่อนชำระ{rate_indicator} <small>(Installment Summary)</small>", unsafe_allow_html=True)
 
+                    if is_seal_special:
+                         st.markdown("""
+                         <div style="background-color: #e8f5e8; padding: 12px; border-radius: 8px; border-left: 4px solid #28a745; margin-bottom: 16px;">
+                         🌟 <strong>Special Rate Applied!</strong> You're getting exclusive financing rates for BYD SEAL Dynamic/Premium models.
+                         </div>
+                         """, unsafe_allow_html=True)
 
-             # Since the 30% branch applies, skip showing the regular financing result.
-             st.stop()
-
-         # Regular (under 30%) scheme (only if 30% branch is not taken)
-         if matched_percent is not None:
-             interest_row = rate_df[rate_df['down_payment'] == matched_percent]
-             if not interest_row.empty:
-                 period_col = str(period)
-                 if period_col in interest_row.columns and pd.notna(interest_row[period_col].values[0]):
-                     try:
-                         interest_rate = float(interest_row[period_col].values[0])
-                         loan_amount = price - down_payment_amount
-                         total_interest = loan_amount * (interest_rate / 100) * (period / 12)
-                         monthly_installment = (loan_amount + total_interest) / period
-
-                         # Add special rate indicator
-                         rate_indicator = " 🌟" if is_seal_special else ""
-                         
-                         st.markdown(f"#### 📊 สรุปการผ่อนชำระ{rate_indicator} <small>(Installment Summary)</small>", unsafe_allow_html=True)
-                         
-                         # Show special rate notification for SEAL models
-                         if is_seal_special:
-                             st.markdown("""
-                             <div style="background-color: #e8f5e8; padding: 12px; border-radius: 8px; border-left: 4px solid #28a745; margin-bottom: 16px;">
-                             🌟 <strong>Special Rate Applied!</strong> You're getting exclusive financing rates for BYD SEAL Dynamic/Premium models.
-                             </div>
-                             """, unsafe_allow_html=True)
-                         
-                         res_col1, res_col2, res_col3 = st.columns(3)
-                         rounded_down_payment = math.ceil(down_payment_amount)
-                         res_col1.metric("เงินดาวน์ที่เลือก (Your Down Payment)", f"฿{rounded_down_payment:,.0f} ({int(down_percent)}%)")
-                         res_col2.metric("อัตราดอกเบี้ย (Interest Rate Applied)", f"{interest_rate:.2f}%", help=f"Based on the nearest qualifying tier: {int(matched_percent)}% ({rate_type})")
-                         rounded_monthly = math.ceil(monthly_installment)
-                         res_col3.metric("ยอดผ่อนรายเดือน (Monthly Installment)", f"฿{rounded_monthly:,.0f} /เดือน")
-
-                     except (ValueError, TypeError, ZeroDivisionError) as e:
-                         st.error(f"⚠️ Error calculating installment for {period} months: {e}")
-                 else:
-                     st.error(f"⚠️ Interest rate data is missing or invalid for {matched_percent:.1f}% down payment and {period} months period.")
-             else:
-                 st.error(f"❌ No interest rate data found for the qualifying tier: {matched_percent:.1f}%.")
-         else:
-             st.error("❌ No financing options available for the provided down payment percentage.")
+                    res_col1, res_col2, res_col3 = st.columns(3)
+                    rounded_down_payment = math.ceil(down_payment_amount)
+                    res_col1.metric("เงินดาวน์ที่เลือก (Your Down Payment)", f"฿{rounded_down_payment:,.0f} ({int(down_percent)}%)")
+                    interest_help_text = promo_info if promo_info else f"Based on the nearest qualifying tier: {int(matched_percent)}%"
+                    res_col2.metric("อัตราดอกเบี้ย (Interest Rate Applied)", f"{interest_rate:.2f}%", help=interest_help_text)
+                    rounded_monthly = math.ceil(monthly_installment)
+                    res_col3.metric("ยอดผ่อนรายเดือน (Monthly Installment)", f"฿{rounded_monthly:,.0f} /เดือน")
+                except (ValueError, TypeError, ZeroDivisionError) as e:
+                    st.error(f"⚠️ Error calculating installment for {period} months: {e}")
+            else:
+                st.error(f"⚠️ Interest rate data is missing or invalid for {matched_percent:.1f}% down payment and {period} months period.")
+        else:
+            st.error(f"❌ No interest rate data found for the qualifying tier: {matched_percent:.1f}%.")
+    else:
+        st.error("❌ No financing options available for the provided down payment percentage.")
+    
 elif not input_valid:
     st.markdown("""
     <div style="background-color:#f8d7da; padding: 16px; border-left: 6px solid #f5c6cb; border-radius: 4px;">
@@ -465,7 +387,7 @@ elif price <= 0:
     st.info("ℹ️ Please select a valid car with a price > 0.")
 elif down_payment_df.empty:
     st.error("❌ Cannot perform calculations because the down payment interest rate data is missing or invalid.")
-
+    
 # PDF Section remains commented out
 # ... (rest of the PDF code if needed) ...
 
@@ -493,7 +415,6 @@ st.markdown("""
         font-family: 'Noto Sans Thai', sans-serif;
     }
     </style>
-
     <div class="custom-footer">
         © 2025 <strong>BYD ชลบุรี ออโตโมทีฟ</strong> | <a href="https://www.bydchonburi.com" target="_blank" style="color:#666;text-decoration:none;">bydchonburi.com</a>
     </div>
