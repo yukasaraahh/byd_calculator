@@ -297,8 +297,8 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
          is_using_30_plan = False
 
          # 30% plan logic: if down payment is above 30% and a 30% tier exists
-         if down_percent > 30 and 30.0 in down_payment_df['down_payment'].values:
-             thirty_plan_row = down_payment_df[down_payment_df["down_payment"] == 30.0].iloc[0]
+         if down_percent > 30 and 30.0 in rate_df['down_payment'].values:
+             thirty_plan_row = rate_df[rate_df["down_payment"] == 30.0].iloc[0]
              loan_amount = price - down_payment_amount
 
              for p in period_options:
@@ -322,9 +322,13 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
                 df_30 = pd.DataFrame(qualified_periods_30_plan)
                 df_30.insert(0, "Option", range(1, len(df_30) + 1))
                 df_30.set_index("Option", inplace=True)
+                
+                # Add special rate indicator if applicable
+                rate_indicator = "🌟 (Special SEAL Rate)" if is_seal_special else ""
+                
                 st.markdown(f"""
                 <div style="background-color: #e6f4ea; padding: 1rem; border-radius: 10px; border-left: 6px solid #34a853;">
-                ✅ <strong>ด้วยเงินดาวน์ {down_payment_amount:,.0f} บาท ({down_percent:.2f}%)</strong> 
+                ✅ <strong>ด้วยเงินดาวน์ {down_payment_amount:,.0f} บาท ({down_percent:.2f}%) {rate_indicator}</strong> 
                 แผนที่คุณเลือกไม่เข้าเงื่อนไขการจัดไฟแนนซ์ แต่ยังมีแผนผ่อนชำระระยะยาวอื่น ๆ ที่คุณสามารถเลือกได้ตามรายละเอียดด้านล่าง<br>
                 <small><em>(The selected plan is not eligible for special financing rates, but alternative longer-term plans are available below.)</em></small>
                 </div>
@@ -388,7 +392,7 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
 
          # Regular (under 30%) scheme (only if 30% branch is not taken)
          if matched_percent is not None:
-             interest_row = down_payment_df[down_payment_df['down_payment'] == matched_percent]
+             interest_row = rate_df[rate_df['down_payment'] == matched_percent]
              if not interest_row.empty:
                  period_col = str(period)
                  if period_col in interest_row.columns and pd.notna(interest_row[period_col].values[0]):
@@ -398,11 +402,23 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
                          total_interest = loan_amount * (interest_rate / 100) * (period / 12)
                          monthly_installment = (loan_amount + total_interest) / period
 
-                         st.markdown("#### 📊 สรุปการผ่อนชำระ <small>(Installment Summary)</small>", unsafe_allow_html=True)
+                         # Add special rate indicator
+                         rate_indicator = " 🌟" if is_seal_special else ""
+                         
+                         st.markdown(f"#### 📊 สรุปการผ่อนชำระ{rate_indicator} <small>(Installment Summary)</small>", unsafe_allow_html=True)
+                         
+                         # Show special rate notification for SEAL models
+                         if is_seal_special:
+                             st.markdown("""
+                             <div style="background-color: #e8f5e8; padding: 12px; border-radius: 8px; border-left: 4px solid #28a745; margin-bottom: 16px;">
+                             🌟 <strong>Special Rate Applied!</strong> You're getting exclusive financing rates for BYD SEAL Dynamic/Premium models.
+                             </div>
+                             """, unsafe_allow_html=True)
+                         
                          res_col1, res_col2, res_col3 = st.columns(3)
                          rounded_down_payment = math.ceil(down_payment_amount)
                          res_col1.metric("เงินดาวน์ที่เลือก (Your Down Payment)", f"฿{rounded_down_payment:,.0f} ({int(down_percent)}%)")
-                         res_col2.metric("อัตราดอกเบี้ย (Interest Rate Applied)", f"{interest_rate:.2f}%", help=f"Based on the nearest qualifying tier: {int(matched_percent)}%")
+                         res_col2.metric("อัตราดอกเบี้ย (Interest Rate Applied)", f"{interest_rate:.2f}%", help=f"Based on the nearest qualifying tier: {int(matched_percent)}% ({rate_type})")
                          rounded_monthly = math.ceil(monthly_installment)
                          res_col3.metric("ยอดผ่อนรายเดือน (Monthly Installment)", f"฿{rounded_monthly:,.0f} /เดือน")
 
