@@ -101,6 +101,10 @@ car_df = read_google_sheet_csv(car_url)
 down_payment_url = convert_google_sheet_link_to_csv("https://docs.google.com/spreadsheets/d/13bc_Vk1G-CDZVkCswlwYakQM-HuQMXi_K0HLG6tdVEY/edit?gid=569887943")
 down_payment_df = read_google_sheet_csv(down_payment_url)
 
+# URL for the new BYD SEAL Premium & Performance promo rates sheet
+seal_promo_url = convert_google_sheet_link_to_csv("https://docs.google.com/spreadsheets/d/13bc_Vk1G-CDZVkCswlwYakQM-HuQMXi_K0HLG6tdVEY/edit?gid=1853511418")
+seal_promo_df = read_google_sheet_csv(seal_promo_url)
+
 # --- Data Cleaning and Preparation ---
 
 # Car Data
@@ -118,7 +122,7 @@ else:
     st.error("❌ Failed to load car data. Cannot proceed.")
     st.stop()
 
-# Down Payment Data
+# Down Payment Data (Standard rate)
 if not down_payment_df.empty:
     if not all(col in down_payment_df.columns for col in ['ดาวน์', '48', '60', '72', '84']):
          st.error("❌ Down payment data sheet is missing required columns ('ดาวน์', '48', '60', '72', '84'). Calculation might fail.")
@@ -139,6 +143,33 @@ if not down_payment_df.empty:
 else:
     st.error("❌ Failed to load down payment data. Calculations will not be possible.")
     down_payment_df = pd.DataFrame(columns=['down_payment', '48', '60', '72', '84'])
+
+# SEAL Promo Rates Data (seal_promo_df)
+
+if not seal_promo_df.empty:
+    if not all(col in seal_promo_df.columns for col in ['ดาวน์', '48', '60', '72', '84']):
+        st.error("❌ SEAL promo rates sheet is missing required columns.")
+        seal_promo_df = pd.DataFrame(columns=['down_payment', '48', '60', '72', '84'])
+    else:
+        seal_promo_df = seal_promo_df[['ดาวน์', '48', '60', '72', '84']].drop_duplicates()
+        seal_promo_df = seal_promo_df.rename(columns={
+            'ดาวน์': 'down_payment',
+            'ผ่อน 48 งวด': '48',
+            'ผ่อน 60 งวด': '60',
+            'ผ่อน 72 งวด': '72',
+            'ผ่อน 84 งวด': '84'
+        })
+        seal_promo_df['down_payment'] = pd.to_numeric(seal_promo_df['down_payment'].astype(str).str.replace('%', '').str.strip(), errors='coerce')
+        seal_promo_df.dropna(subset=['down_payment'], inplace=True)
+        for col in ['48', '60', '72', '84']:
+            if col in seal_promo_df.columns:
+                seal_promo_df[col] = pd.to_numeric(seal_promo_df[col].astype(str).str.replace('%', '').str.strip(), errors='coerce')
+        if seal_promo_df.empty:
+            st.warning("⚠️ No valid SEAL promo percentage tiers found after cleaning.")
+else:
+    st.error("❌ Failed to load SEAL promo rates. Calculations for these models will fail.")
+    seal_promo_df = pd.DataFrame(columns=['down_payment', '48', '60', '72', '84'])
+
     
 # ✅ Session state setup
 if "show_result" not in st.session_state:
@@ -246,7 +277,19 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
     if down_payment_amount >= price:
          st.info("เงินดาวน์เท่ากับราคารถ ไม่สามารถจัดไฟแนนซ์ได้ (The down payment is equal to the car's price. No financing is required.)")
     else:
-         available_percents = sorted(down_payment_df['down_payment'].unique())
+         # Check if this is a BYD SEAL Dynamic or Premium model for special rates
+         is_seal_special = (selected_model == "BYD SEAL" and 
+                           selected_submodel in ["Dynamic (510 km)", "Premium (650 km)"])
+         
+         # Choose the appropriate rate table
+         if is_seal_special and not seal_promo_df.empty:
+             rate_df = seal_promo_df
+             rate_type = "Special SEAL Rate"
+         else:
+             rate_df = down_payment_df
+             rate_type = "Standard Rate"
+         
+         available_percents = sorted(rate_df['down_payment'].unique())
          matched_percent = max([p for p in available_percents if p <= down_percent], default=None)
 
          # Initialize variables for the 30% plan branch
