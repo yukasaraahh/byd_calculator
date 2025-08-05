@@ -288,7 +288,7 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
     else:
          # Check if this is a BYD SEAL Dynamic or Premium model for special rates
          is_seal_special = (selected_model == "BYD SEAL" and 
-                           selected_submodel in ["Dynamic (510 km)", "Premium (650 km)"])
+                           selected_submodel in ["Dynamic", "Premium"])
          
          # Debug info
          st.write(f"DEBUG - Selected Model: {selected_model}")
