@@ -156,13 +156,21 @@ if not seal_promo_df.empty:
         st.write("Available columns:", seal_promo_df.columns.tolist())
         seal_promo_df = pd.DataFrame(columns=['down_payment', '48', '60', '72', '84'])
     else:
+        # Only select the columns we need, no extra renaming
         seal_promo_df = seal_promo_df[['ดาวน์', '48', '60', '72', '84']].drop_duplicates()
         seal_promo_df = seal_promo_df.rename(columns={'ดาวน์': 'down_payment'})
-        seal_promo_df['down_payment'] = pd.to_numeric(seal_promo_df['down_payment'].astype(str).str.replace('%', '').str.strip(), errors='coerce')
+        
+        # Clean the down payment column
+        seal_promo_df['down_payment'] = seal_promo_df['down_payment'].astype(str).str.replace('%', '').str.strip()
+        seal_promo_df['down_payment'] = pd.to_numeric(seal_promo_df['down_payment'], errors='coerce')
         seal_promo_df.dropna(subset=['down_payment'], inplace=True)
+        
+        # Clean the period columns
         for col in ['48', '60', '72', '84']:
             if col in seal_promo_df.columns:
-                seal_promo_df[col] = pd.to_numeric(seal_promo_df[col].astype(str).str.replace('%', '').str.strip(), errors='coerce')
+                seal_promo_df[col] = seal_promo_df[col].astype(str).str.replace('%', '').str.strip()
+                seal_promo_df[col] = pd.to_numeric(seal_promo_df[col], errors='coerce')
+        
         if seal_promo_df.empty:
             st.warning("⚠️ No valid SEAL promo percentage tiers found after cleaning.")
         else:
@@ -282,16 +290,31 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
          is_seal_special = (selected_model == "BYD SEAL" and 
                            selected_submodel in ["Dynamic (510 km)", "Premium (650 km)"])
          
+         # Debug info
+         st.write(f"DEBUG - Selected Model: {selected_model}")
+         st.write(f"DEBUG - Selected Submodel: {selected_submodel}")
+         st.write(f"DEBUG - Is SEAL Special: {is_seal_special}")
+         st.write(f"DEBUG - SEAL Promo DF Empty: {seal_promo_df.empty}")
+         
          # Choose the appropriate rate table
          if is_seal_special and not seal_promo_df.empty:
              rate_df = seal_promo_df
              rate_type = "Special SEAL Rate"
+             st.write("DEBUG - Using SEAL Promo Rates")
          else:
              rate_df = down_payment_df
              rate_type = "Standard Rate"
+             st.write("DEBUG - Using Standard Rates")
+         
+         st.write(f"DEBUG - Rate DF columns: {rate_df.columns.tolist()}")
+         st.write(f"DEBUG - Rate DF data: {rate_df}")
          
          available_percents = sorted(rate_df['down_payment'].unique())
          matched_percent = max([p for p in available_percents if p <= down_percent], default=None)
+         
+         st.write(f"DEBUG - Available percents: {available_percents}")
+         st.write(f"DEBUG - Down percent: {down_percent}")
+         st.write(f"DEBUG - Matched percent: {matched_percent}")
 
          # Initialize variables for the 30% plan branch
          qualified_periods_30_plan = []
