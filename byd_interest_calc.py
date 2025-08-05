@@ -254,8 +254,8 @@ if st.session_state.show_result and input_valid and price > 0 and not down_payme
     # Determine which rate table to use based on the selected model
     # Apply special promo rates ONLY to BYD SEAL Dynamic and Premium
     is_seal_special = (
-        "byd seal" in selected_model.strip().lower() and
-        selected_submodel.strip().lower() in ["dynamic", "premium"]
+    "BYD SEAL" in selected_model.strip().lower() and
+    any(kw in selected_submodel.strip().lower() for kw in ["dynamic", "premium"])
     )
     
     if is_seal_special and not seal_promo_df.empty:
