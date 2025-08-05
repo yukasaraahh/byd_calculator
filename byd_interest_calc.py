@@ -147,18 +147,17 @@ else:
 # SEAL Promo Rates Data (seal_promo_df)
 
 if not seal_promo_df.empty:
+    # Debug: show what columns we actually have
+    st.write("DEBUG - SEAL Promo Columns:", seal_promo_df.columns.tolist())
+    st.write("DEBUG - SEAL Promo Data:", seal_promo_df.head())
+    
     if not all(col in seal_promo_df.columns for col in ['ดาวน์', '48', '60', '72', '84']):
         st.error("❌ SEAL promo rates sheet is missing required columns.")
+        st.write("Available columns:", seal_promo_df.columns.tolist())
         seal_promo_df = pd.DataFrame(columns=['down_payment', '48', '60', '72', '84'])
     else:
         seal_promo_df = seal_promo_df[['ดาวน์', '48', '60', '72', '84']].drop_duplicates()
-        seal_promo_df = seal_promo_df.rename(columns={
-            'ดาวน์': 'down_payment',
-            'ผ่อน 48 งวด': '48',
-            'ผ่อน 60 งวด': '60',
-            'ผ่อน 72 งวด': '72',
-            'ผ่อน 84 งวด': '84'
-        })
+        seal_promo_df = seal_promo_df.rename(columns={'ดาวน์': 'down_payment'})
         seal_promo_df['down_payment'] = pd.to_numeric(seal_promo_df['down_payment'].astype(str).str.replace('%', '').str.strip(), errors='coerce')
         seal_promo_df.dropna(subset=['down_payment'], inplace=True)
         for col in ['48', '60', '72', '84']:
@@ -166,6 +165,8 @@ if not seal_promo_df.empty:
                 seal_promo_df[col] = pd.to_numeric(seal_promo_df[col].astype(str).str.replace('%', '').str.strip(), errors='coerce')
         if seal_promo_df.empty:
             st.warning("⚠️ No valid SEAL promo percentage tiers found after cleaning.")
+        else:
+            st.write("DEBUG - Cleaned SEAL Promo Data:", seal_promo_df)
 else:
     st.error("❌ Failed to load SEAL promo rates. Calculations for these models will fail.")
     seal_promo_df = pd.DataFrame(columns=['down_payment', '48', '60', '72', '84'])
